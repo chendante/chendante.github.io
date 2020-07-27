@@ -94,17 +94,18 @@
 
 
 
-  <meta name="description" content="关于博客这个博客建立于我的大三的暑假，之前在查阅各种资料的时候，就会经常跳到别人的个人站点上去，心生羡慕。 加之未来的学习路程大多都要靠自己一个人来走，所以希望能够有一个地方见证我的学习历程，也顺便起到一个督促的作用。 在这些原因下，这个博客诞生了。 这个博客将会主要放一些我的学习笔记，也会有一些与技术无关的杂记。 关于我我的技术栈主要是后端开发，但是因为未来研究生学习的缘故，在未来肯定也会放一些">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="http://yoursite.com/about/index.html">
+  <meta name="description" content="word embedding 对于相同word type不同word token的词会有相同的embedding。(river bank, money bank) Contextualized Word Embedding Each word token has its own embedding(even though it has the same word type) The embeddi">
+<meta name="keywords" content="machine learning,李宏毅 机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【李宏毅 机器学习】Bert">
+<meta property="og:url" content="http://yoursite.com/category/【李宏毅-机器学习】Bert/index.html">
 <meta property="og:site_name" content="ZChen&#39;s Blog">
-<meta property="og:description" content="关于博客这个博客建立于我的大三的暑假，之前在查阅各种资料的时候，就会经常跳到别人的个人站点上去，心生羡慕。 加之未来的学习路程大多都要靠自己一个人来走，所以希望能够有一个地方见证我的学习历程，也顺便起到一个督促的作用。 在这些原因下，这个博客诞生了。 这个博客将会主要放一些我的学习笔记，也会有一些与技术无关的杂记。 关于我我的技术栈主要是后端开发，但是因为未来研究生学习的缘故，在未来肯定也会放一些">
+<meta property="og:description" content="word embedding 对于相同word type不同word token的词会有相同的embedding。(river bank, money bank) Contextualized Word Embedding Each word token has its own embedding(even though it has the same word type) The embeddi">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-13T07:17:27.444Z">
+<meta property="og:updated_time" content="2020-07-26T14:23:16.650Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="about">
-<meta name="twitter:description" content="关于博客这个博客建立于我的大三的暑假，之前在查阅各种资料的时候，就会经常跳到别人的个人站点上去，心生羡慕。 加之未来的学习路程大多都要靠自己一个人来走，所以希望能够有一个地方见证我的学习历程，也顺便起到一个督促的作用。 在这些原因下，这个博客诞生了。 这个博客将会主要放一些我的学习笔记，也会有一些与技术无关的杂记。 关于我我的技术栈主要是后端开发，但是因为未来研究生学习的缘故，在未来肯定也会放一些">
+<meta name="twitter:title" content="【李宏毅 机器学习】Bert">
+<meta name="twitter:description" content="word embedding 对于相同word type不同word token的词会有相同的embedding。(river bank, money bank) Contextualized Word Embedding Each word token has its own embedding(even though it has the same word type) The embeddi">
 
 
 
@@ -112,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/about/">
+  <link rel="canonical" href="http://yoursite.com/category/【李宏毅-机器学习】Bert/">
 
 
 
@@ -122,7 +123,7 @@
   };
 </script>
 
-  <title>about | ZChen's Blog</title>
+  <title>【李宏毅 机器学习】Bert | ZChen's Blog</title>
   
 
 
@@ -224,7 +225,7 @@
         
         
           
-          <li class="menu-item menu-item-about menu-item-active">
+          <li class="menu-item menu-item-about">
 
     
     
@@ -293,28 +294,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -341,52 +320,206 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/category/【李宏毅-机器学习】Bert/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZChen">
+      <meta itemprop="description" content="这是一个用于记录我个人学习历程的小站。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZChen's Blog">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">about
-
-</h1>
-
-<div class="post-meta">
-  
-  
-
-
-
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <h1 id="关于博客"><a href="#关于博客" class="headerlink" title="关于博客"></a>关于博客</h1><p>这个博客建立于我的大三的暑假，之前在查阅各种资料的时候，就会经常跳到别人的个人站点上去，心生羡慕。</p>
-<p>加之未来的学习路程大多都要靠自己一个人来走，所以希望能够有一个地方见证我的学习历程，也顺便起到一个督促的作用。</p>
-<p>在这些原因下，这个博客诞生了。</p>
-<p>这个博客将会主要放一些我的学习笔记，也会有一些与技术无关的杂记。</p>
-<h1 id="关于我"><a href="#关于我" class="headerlink" title="关于我"></a>关于我</h1><p>我的技术栈主要是后端开发，但是因为未来研究生学习的缘故，在未来肯定也会放一些有关机器学习、数据挖掘的论文笔记和学习心得。</p>
-<p>由于当前这个博客中内容还很少，想必也没有什么人需要与我交流，而且这个博客建立的初衷也只是记录下我个人的学习历程，因此就不留下什么联系方式了。</p>
-<p>就放一个GitHub账号吧：<a href="https://github.com/chendante" target="_blank" rel="noopener">chendante</a></p>
+          <h1 class="post-title" itemprop="name headline">【李宏毅 机器学习】Bert
 
+              
+            
+          </h1>
         
-      </div>
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-26 20:26:04 / 修改时间：22:23:16" itemprop="dateCreated datePublished" datetime="2020-07-26T20:26:04+08:00">2020-07-26</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p>word embedding 对于相同word type不同word token的词会有相同的embedding。(river bank, money bank)</p>
+<h1 id="Contextualized-Word-Embedding"><a href="#Contextualized-Word-Embedding" class="headerlink" title="Contextualized Word Embedding"></a>Contextualized Word Embedding</h1><ul>
+<li>Each word token has its own embedding(even though it has the same word type)</li>
+<li>The embeddings of word tokens also depend on its context</li>
+</ul>
+<h1 id="Embeddings-from-Language-Model-ELMO"><a href="#Embeddings-from-Language-Model-ELMO" class="headerlink" title="Embeddings from Language Model (ELMO)"></a>Embeddings from Language Model (ELMO)</h1><p>RNN-based language models. 用RNN来训练，预测每个词的下一个词。RNN的中间层输出作为word embedding。因此当句子中的词得到embedding时，包含有上文信息。</p>
+<p>为了获取下文信息，还要训练一个反向的RNN。将两个embedding接起来作为最终结果。</p>
+<p>Q:选取那一层RNN的输出？</p>
+<h1 id="Bidirectional-Encoder-Representation-from-Transformers-BERT"><a href="#Bidirectional-Encoder-Representation-from-Transformers-BERT" class="headerlink" title="Bidirectional Encoder Representation from Transformers (BERT)"></a>Bidirectional Encoder Representation from Transformers (BERT)</h1><p>BERT = Encoder of Transformer</p>
+<p>输入一个句子，得到一串embedding每个embedding对应一个word(用BERT处理中文时，用字比用词可能更好)。</p>
+<p>训练方法：</p>
+<ol>
+<li><p>Masked LM: 将句子中15%的词遮盖（mask标志代替），通过BERT后，mask标志的embedding 用Linear Multi-class Classifier来预测，得到one-hot vector，使其为对应词。</p>
+</li>
+<li><p>Next Sentence Prediction: [CLS] 的embedding通过Linear Binary Classifier，得到Yes or No。</p>
+</li>
+</ol>
+<blockquote>
+<ul>
+<li>[SEP]: the boundary of two sentences.</li>
+<li>[CLS]: the position that outputs classificiation results.</li>
+</ul>
+</blockquote>
+<p>目前两种方式会同时使用。</p>
+<h1 id="How-to-use-BERT"><a href="#How-to-use-BERT" class="headerlink" title="How to use BERT"></a>How to use BERT</h1><h2 id="How-to-use-BERT-CASE-1"><a href="#How-to-use-BERT-CASE-1" class="headerlink" title="How to use BERT - CASE 1"></a>How to use BERT - CASE 1</h2><p>句子分类。BERT添加[CLS]字段，表示句子类别，输出将进入Linear Multi-class Classifier。BERT部分fined-tune，Classifier从头学。</p>
+<h2 id="How-to-use-BERT-CASE-2"><a href="#How-to-use-BERT-CASE-2" class="headerlink" title="How to use BERT - CASE 2"></a>How to use BERT - CASE 2</h2><p>词分类。BERT需要从头学。同时学习一个Linear CLs。</p>
+<h2 id="How-to-use-BERT-CASE-3"><a href="#How-to-use-BERT-CASE-3" class="headerlink" title="How to use BERT - CASE 3"></a>How to use BERT - CASE 3</h2><p>两个句子分类。</p>
+<h2 id="How-to-use-BERT-CASE-4"><a href="#How-to-use-BERT-CASE-4" class="headerlink" title="How to use BERT - CASE 4"></a>How to use BERT - CASE 4</h2><p>QA</p>
+
       
     </div>
-    
-
-
 
     
+
     
     
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+          
+            <a href="/tags/李宏毅-机器学习/" rel="tag"># 李宏毅 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/category/【李宏毅-机器学习】Unsupervised-Learning-Auto-encoder/" rel="next" title="【李宏毅 机器学习】Unsupervised Learning - Auto-encoder">
+                <i class="fa fa-chevron-left"></i> 【李宏毅 机器学习】Unsupervised Learning - Auto-encoder
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
   </div>
 
 
@@ -545,7 +678,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于博客"><span class="nav-number">1.</span> <span class="nav-text">关于博客</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于我"><span class="nav-number">2.</span> <span class="nav-text">关于我</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Contextualized-Word-Embedding"><span class="nav-number">1.</span> <span class="nav-text">Contextualized Word Embedding</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Embeddings-from-Language-Model-ELMO"><span class="nav-number">2.</span> <span class="nav-text">Embeddings from Language Model (ELMO)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bidirectional-Encoder-Representation-from-Transformers-BERT"><span class="nav-number">3.</span> <span class="nav-text">Bidirectional Encoder Representation from Transformers (BERT)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#How-to-use-BERT"><span class="nav-number">4.</span> <span class="nav-text">How to use BERT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-use-BERT-CASE-1"><span class="nav-number">4.1.</span> <span class="nav-text">How to use BERT - CASE 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-use-BERT-CASE-2"><span class="nav-number">4.2.</span> <span class="nav-text">How to use BERT - CASE 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-use-BERT-CASE-3"><span class="nav-number">4.3.</span> <span class="nav-text">How to use BERT - CASE 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-use-BERT-CASE-4"><span class="nav-number">4.4.</span> <span class="nav-text">How to use BERT - CASE 4</span></a></li></ol></li></ol></div>
             
 
           </div>
