@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="U5fLrn5lnXK1pZ9rCqUsumcSazNLlF-7sGQBgbvPQ9M">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="建议看一下知识图谱构建技术综述这篇综述。我这篇入门大部分内容提取自这篇综述。 本文持续更新。 知识图谱定义知识图谱(knowledge graph)是结构化的语义知识库, 用于以符号形式描述物理世界中的概念及其相互关系.其基本组成单位是“实体-关系-实体”三元组, 以及实体及其相关属性-值对, 实体间通过关系相互联结, 构成网状的知识结构。 知识图谱的定义由谷歌首次提出于Introducing t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="知识图谱入门">
+<meta property="og:url" content="http://yoursite.com/category/知识图谱入门/index.html">
+<meta property="og:site_name" content="ZChen&#39;s Blog">
+<meta property="og:description" content="建议看一下知识图谱构建技术综述这篇综述。我这篇入门大部分内容提取自这篇综述。 本文持续更新。 知识图谱定义知识图谱(knowledge graph)是结构化的语义知识库, 用于以符号形式描述物理世界中的概念及其相互关系.其基本组成单位是“实体-关系-实体”三元组, 以及实体及其相关属性-值对, 实体间通过关系相互联结, 构成网状的知识结构。 知识图谱的定义由谷歌首次提出于Introducing t">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-07-25T14:23:22.694Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="知识图谱入门">
+<meta name="twitter:description" content="建议看一下知识图谱构建技术综述这篇综述。我这篇入门大部分内容提取自这篇综述。 本文持续更新。 知识图谱定义知识图谱(knowledge graph)是结构化的语义知识库, 用于以符号形式描述物理世界中的概念及其相互关系.其基本组成单位是“实体-关系-实体”三元组, 以及实体及其相关属性-值对, 实体间通过关系相互联结, 构成网状的知识结构。 知识图谱的定义由谷歌首次提出于Introducing t">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/category/知识图谱入门/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>知识图谱入门 | ZChen's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZChen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/category/知识图谱入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZChen">
+      <meta itemprop="description" content="这是一个用于记录我个人学习历程的小站。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZChen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">知识图谱入门
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-04 09:59:50" itemprop="dateCreated datePublished" datetime="2019-11-04T09:59:50+08:00">2019-11-04</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-07-25 22:23:22" itemprop="dateModified" datetime="2021-07-25T22:23:22+08:00">2021-07-25</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/知识图谱/" itemprop="url" rel="index"><span itemprop="name">知识图谱</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>建议看一下<a href="http://kns.cnki.net//KXReader/Detail?TIMESTAMP=637079442179476250&DBCODE=CJFQ&TABLEName=CJFDLAST2016&FileName=JFYZ201603009&RESULT=1&SIGN=Au6SSMT0m1NtHUck%2futGr3TITls%3d" target="_blank" rel="noopener">知识图谱构建技术综述</a>这篇综述。我这篇入门大部分内容提取自这篇综述。</p>
+<p>本文持续更新。</p>
+<h1 id="知识图谱定义"><a href="#知识图谱定义" class="headerlink" title="知识图谱定义"></a>知识图谱定义</h1><p>知识图谱(knowledge graph)是结构化的语义知识库, 用于以符号形式描述物理世界中的概念及其相互关系.其基本组成单位是“实体-关系-实体”三元组, 以及实体及其相关属性-值对, 实体间通过关系相互联结, 构成网状的知识结构。</p>
+<p>知识图谱的定义由谷歌首次提出于<a href="https://www.blog.google/products/search/introducing-knowledge-graph-things-not/" target="_blank" rel="noopener">Introducing the Knowledge Graph: things, not strings</a>,不过目前知识图谱的概念和应用都已经变得更为广泛了。</p>
+<h1 id="知识图谱架构"><a href="#知识图谱架构" class="headerlink" title="知识图谱架构"></a>知识图谱架构</h1><h2 id="逻辑架构"><a href="#逻辑架构" class="headerlink" title="逻辑架构"></a>逻辑架构</h2><p>逻辑上知识图谱可划分为2个层次：</p>
+<ol>
+<li><p>数据层：知识以事实 (fact) 为单位存储在图数据库</p>
+</li>
+<li><p>模式层：</p>
+</li>
+</ol>
+<h2 id="构建技术架构"><a href="#构建技术架构" class="headerlink" title="构建技术架构"></a>构建技术架构</h2><h1 id="知识图谱构建技术"><a href="#知识图谱构建技术" class="headerlink" title="知识图谱构建技术"></a>知识图谱构建技术</h1><p>自底向上构建知识图谱的过程是一个迭代更新的过程，每一轮更新包括三个步骤：</p>
+<ol>
+<li>信息抽取：从各类数据源中提取出实体、属性以及实体间的关系。</li>
+<li>知识融合：获得知识后，需要进行整合，以消除矛盾和歧义（多对一和一对多问题）。</li>
+<li>知识加工：处理得到的新知识要经过质量评估才能加入知识库。</li>
+</ol>
+<h2 id="信息抽取"><a href="#信息抽取" class="headerlink" title="信息抽取"></a>信息抽取</h2><p>信息抽取 (information extraction) 是知识图谱构建的第1步。</p>
+<h3 id="实体抽取"><a href="#实体抽取" class="headerlink" title="实体抽取"></a>实体抽取</h3><p>实体抽取, 也称为命名实体识别 (named entity recognition, NER) , 是指从文本数据集中自动识别出命名实体。</p>
+<h3 id="关系抽取"><a href="#关系抽取" class="headerlink" title="关系抽取"></a>关系抽取</h3><p>文本语料经过实体抽取, 得到的是一系列离散的命名实体, 为了得到语义信息, 还需要从相关语料中提取出实体之间的关联关系, 通过关系将实体 (概念) 联系起来, 才能够形成网状的知识结构。</p>
+<h3 id="属性抽取"><a href="#属性抽取" class="headerlink" title="属性抽取"></a>属性抽取</h3><p>属性抽取的目标是从不同信息源中采集特定实体的属性信息.例如针对某个公众人物, 可以从网络公开信息中得到其昵称、生日、国籍、教育背景等信息。</p>
+<h2 id="知识融合"><a href="#知识融合" class="headerlink" title="知识融合"></a>知识融合</h2><h3 id="实体链接"><a href="#实体链接" class="headerlink" title="实体链接"></a>实体链接</h3><p>实体链接 (entity linking) 是指对于从文本中抽取得到的实体对象, 将其链接到知识库中对应的正确实体对象的操作。</p>
+<p>实体链接的一般流程是:1) 从文本中通过实体抽取得到实体指称项;2) 进行实体消歧和共指消解, 判断知识库中的同名实体与之是否代表不同的含义以及知识库中是否存在其他命名实体与之表示相同的含义;3) 在确认知识库中对应的正确实体对象之后, 将该实体指称项链接到知识库中对应实体.</p>
+<h3 id="知识合并"><a href="#知识合并" class="headerlink" title="知识合并"></a>知识合并</h3><p>在构建知识图谱时, 可以从第三方知识库产品或已有结构化数据获取知识输入。</p>
+<h2 id="知识加工"><a href="#知识加工" class="headerlink" title="知识加工"></a>知识加工</h2><p>通过信息抽取, 可以从原始语料中提取出实体、关系与属性等知识要素。再经过知识融合, 可以消除实体指称项与实体对象之间的歧义, 得到一系列基本的事实表达。然而, 事实本身并不等于知识, 要想最终获得结构化、网络化的知识体系, 还需要经历知识加工的过程。知识加工主要包括3方面内容:本体构建、知识推理和质量评估。</p>
+<h3 id="本体构建"><a href="#本体构建" class="headerlink" title="本体构建"></a>本体构建</h3><p>本体 (ontology) 是对概念进行建模的规范, 是描述客观世界的抽象模型, 以形式化方式对概念及其之间的联系给出明确定义。本体的最大特点在于它是共享的, 本体中反映的知识是一种明确定义的共识。</p>
+<p>定义：本体是同一领域内的不同主体之间进行交流的语义基础。</p>
+<p>本体是树状结构, 相邻层次的节点 (概念) 之间具有严格的“IsA”关系, 这种单纯的关系有助于知识推理, 但却不利于表达概念的多样性。在知识图谱中, 本体位于模式层, 用于描述概念层次体系是知识库中知识的概念模板。</p>
+<p>数据驱动的自动化本体构建过程包含3 个阶段:实体并列关系相似度计算、实体上下位关系抽取以及本体的生成。</p>
+<blockquote>
+<ol>
+<li>实体并列关系相似度是用于考察任意给定的2个实体在多大程度上属于同一概念分类的指标测度, 相似度越高, 表明这2个实体越有可能属于同一语义类别.所谓并列关系, 是相对于纵向的概念隶属关系而言的.例如“中国”和“美国”作为国家名称的实体, 具有较高的并列关系相似度;而“美国”和“手机”这2个实体, 属于同一语义类别的可能性较低, 因此具有较低的并列关系相似度.</li>
+<li>实体上下位关系抽取是用于确定概念之间的隶属 (IsA) 关系, 这种关系也称为上下位关系, 例如, 词组 (导弹, 武器) 构成上下位关系, 其中的“导弹”为下位词, “武器”为上位词.</li>
+<li>本体生成阶段的主要任务是对各层次得到的概念进行聚类, 并对其进行语义类的标定 (为该类中的实体指定1个或多个公共上位词) .</li>
+</ol>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/category/字节跳动-实习经历/" rel="next" title="字节跳动 实习经历">
+                <i class="fa fa-chevron-left"></i> 字节跳动 实习经历
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/category/【李宏毅-机器学习】Transformer/" rel="prev" title="【李宏毅 机器学习】Transformer">
+                【李宏毅 机器学习】Transformer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="ZChen">
+            
+              <p class="site-author-name" itemprop="name">ZChen</p>
+              <div class="site-description motion-element" itemprop="description">这是一个用于记录我个人学习历程的小站。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/chendante" title="GitHub &rarr; https://github.com/chendante" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#知识图谱定义"><span class="nav-number">1.</span> <span class="nav-text">知识图谱定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#知识图谱架构"><span class="nav-number">2.</span> <span class="nav-text">知识图谱架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑架构"><span class="nav-number">2.1.</span> <span class="nav-text">逻辑架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建技术架构"><span class="nav-number">2.2.</span> <span class="nav-text">构建技术架构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#知识图谱构建技术"><span class="nav-number">3.</span> <span class="nav-text">知识图谱构建技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息抽取"><span class="nav-number">3.1.</span> <span class="nav-text">信息抽取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实体抽取"><span class="nav-number">3.1.1.</span> <span class="nav-text">实体抽取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关系抽取"><span class="nav-number">3.1.2.</span> <span class="nav-text">关系抽取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性抽取"><span class="nav-number">3.1.3.</span> <span class="nav-text">属性抽取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识融合"><span class="nav-number">3.2.</span> <span class="nav-text">知识融合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实体链接"><span class="nav-number">3.2.1.</span> <span class="nav-text">实体链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识合并"><span class="nav-number">3.2.2.</span> <span class="nav-text">知识合并</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识加工"><span class="nav-number">3.3.</span> <span class="nav-text">知识加工</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本体构建"><span class="nav-number">3.3.1.</span> <span class="nav-text">本体构建</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZChen</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

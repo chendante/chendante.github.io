@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="U5fLrn5lnXK1pZ9rCqUsumcSazNLlF-7sGQBgbvPQ9M">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这是Go汇编入门的第二篇文章，也是计划中的最后一篇。第一篇的地址：【golang】Go汇编入门1。 这一章中，将会用一个go汇编入门常用的样例程序，来进一步了解Go汇编。 样例程序1234package main//go:noinlinefunc add(a, b int32) (int32, bool) &amp;#123; return a + b, true &amp;#125;func main() &amp;#">
+<meta name="keywords" content="golang,后端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【golang】Go汇编入门2">
+<meta property="og:url" content="http://yoursite.com/category/【golang】Go汇编入门2/index.html">
+<meta property="og:site_name" content="ZChen&#39;s Blog">
+<meta property="og:description" content="这是Go汇编入门的第二篇文章，也是计划中的最后一篇。第一篇的地址：【golang】Go汇编入门1。 这一章中，将会用一个go汇编入门常用的样例程序，来进一步了解Go汇编。 样例程序1234package main//go:noinlinefunc add(a, b int32) (int32, bool) &amp;#123; return a + b, true &amp;#125;func main() &amp;#">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-07-25T14:23:22.691Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【golang】Go汇编入门2">
+<meta name="twitter:description" content="这是Go汇编入门的第二篇文章，也是计划中的最后一篇。第一篇的地址：【golang】Go汇编入门1。 这一章中，将会用一个go汇编入门常用的样例程序，来进一步了解Go汇编。 样例程序1234package main//go:noinlinefunc add(a, b int32) (int32, bool) &amp;#123; return a + b, true &amp;#125;func main() &amp;#">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/category/【golang】Go汇编入门2/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>【golang】Go汇编入门2 | ZChen's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZChen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/category/【golang】Go汇编入门2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZChen">
+      <meta itemprop="description" content="这是一个用于记录我个人学习历程的小站。">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZChen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【golang】Go汇编入门2
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-11 15:34:54" itemprop="dateCreated datePublished" datetime="2019-09-11T15:34:54+08:00">2019-09-11</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-07-25 22:23:22" itemprop="dateModified" datetime="2021-07-25T22:23:22+08:00">2021-07-25</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/后端/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是<code>Go汇编入门</code>的第二篇文章，也是计划中的最后一篇。第一篇的地址：<a href="../ZChen-blog.github.io/category/【golang】Go汇编入门1/">【golang】Go汇编入门1</a>。</p>
+<p>这一章中，将会用一个go汇编入门常用的样例程序，来进一步了解Go汇编。</p>
+<h1 id="样例程序"><a href="#样例程序" class="headerlink" title="样例程序"></a>样例程序</h1><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="comment">//go:noinline</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(a, b <span class="keyword">int32</span>)</span> <span class="params">(<span class="keyword">int32</span>, <span class="keyword">bool</span>)</span></span> &#123; <span class="keyword">return</span> a + b, <span class="literal">true</span> &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123; add(<span class="number">10</span>, <span class="number">32</span>) &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>//go:noinline</code>是编译器指令，不可省略（而且甚至<code>//</code>和<code>go</code>中间不能有空格）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> go version</span></span><br><span class="line">go version go1.12.6 darwin/amd64</span><br><span class="line"><span class="meta">$</span><span class="bash"> GOOS=linux GOARCH=amd64 go tool compile -S main.go &gt; main.s</span></span><br></pre></td></tr></table></figure>
+
+<p>golang交叉编译非常方便，我们这里直接分析Linux下的汇编代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">0x0000  TEXT	    &quot;&quot;.add(SB), NOSPLIT|ABIInternal, $0-16</span><br><span class="line">0x0000 	FUNCDATA	$0, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	FUNCDATA	$1, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	FUNCDATA	$3, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	PCDATA	    $2, $0</span><br><span class="line">0x0000 	PCDATA	    $0, $0</span><br><span class="line">0x0000 	MOVL	    &quot;&quot;.b+12(SP), AX</span><br><span class="line">0x0004 	MOVL	    &quot;&quot;.a+8(SP), CX</span><br><span class="line">0x0008 	ADDL	    CX, AX</span><br><span class="line">0x000a 	MOVL	    AX, &quot;&quot;.~r2+16(SP)</span><br><span class="line">0x000e 	MOVB	    $1, &quot;&quot;.~r3+20(SP)</span><br><span class="line">0x0013 	RET</span><br><span class="line"></span><br><span class="line">0x0000 	TEXT	    &quot;&quot;.main(SB), ABIInternal, $24-0</span><br><span class="line">0x0000 	MOVQ	    (TLS), CX</span><br><span class="line">0x0009 	CMPQ	    SP, 16(CX)</span><br><span class="line">0x000d 	JLS	58</span><br><span class="line">0x000f 	SUBQ	    $24, SP</span><br><span class="line">0x0013 	MOVQ	    BP, 16(SP)</span><br><span class="line">0x0018 	LEAQ	    16(SP), BP</span><br><span class="line">0x001d 	FUNCDATA	$0, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	FUNCDATA	$1, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	FUNCDATA	$3, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	PCDATA	    $2, $0</span><br><span class="line">0x001d 	PCDATA	    $0, $0</span><br><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br><span class="line">0x002b 	CALL	    &quot;&quot;.add(SB)</span><br><span class="line">0x0030 	MOVQ	    16(SP), BP</span><br><span class="line">0x0035 	ADDQ	    $24, SP</span><br><span class="line">0x0039 	RET</span><br></pre></td></tr></table></figure>
+
+<p>以上汇编代码，省略了部分不重要内容。</p>
+<h1 id="Dissecting-quot-add-quot"><a href="#Dissecting-quot-add-quot" class="headerlink" title="Dissecting &quot;add&quot;"></a>Dissecting <code>&quot;add&quot;</code></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x0000  TEXT &quot;&quot;.add(SB), NOSPLIT|ABIInternal, $0-16</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>0x0000: 当前指令相对于当前函数的偏移量。</p>
+</li>
+<li><p><code>TEXT &quot;&quot;.add</code>: <code>TEXT</code>指令声明了<code>&quot;&quot;.add</code>是<code>.text</code>段(程序代码在运行期会放在内存的<code>.text</code>段中)的一部分，并表明跟在这个声明后的是函数的函数体。 在链接期，<code>&quot;&quot;</code> 这个空字符会被替换为当前的包名: 也就是说，<code>&quot;&quot;.add</code> 在链接到二进制文件后会变成 <code>main.add</code>。</p>
+</li>
+<li><p><code>(SB)</code>:<code>SB</code>是一个虚拟寄存器，保存了静态基地址(static-base) 指针，即我们程序地址空间的开始地址。换句话来讲，它有一个直接的绝对地址: 是一个全局的函数符号。<code>&quot;&quot;.add(SB)</code>表明我们的符号位于某个固定的相对地址空间起始处的偏移位置 (最终是由链接器计算得到的)，也就是它在链接过后，会成为add函数的地址。</p>
+</li>
+<li><p><code>NOSPLIT</code>: 向编译器表明不应该插入<code>stack-split</code>的用来检查栈需要扩张的前导指令。 在我们 add 函数的这种情况下，编译器自己帮我们插入了这个标记。类似的这一系列指令，具体可看<a href="https://golang.org/doc/asm#directives" target="_blank" rel="noopener">[Official] A Quick Guide to Go’s Assembler
+</a>，在这里不做过多介绍。</p>
+</li>
+<li><p><code>$0-16</code>: <code>$0</code>代表即将分配的栈帧大小；而<code>$16</code>指定了调用方传入的参数大小，单位是byte。传入参数大小为16bytes，因为除了两个32位的加数<code>a</code> <code>b</code>，栈中还会保存一个返回地址，在64位系统中，占4bytes。如果NOSPLIT没有被指定，则必须提供参数大小。对于Go原型的汇编函数，go vet会检查参数大小是否正确。</p>
+</li>
+<li><p><code>FUNCDATA</code>: FUNCDATA以及PCDATA指令包含有被垃圾回收所使用的信息；这些指令是被编译器加入的。</p>
+</li>
+<li><p><code>&quot;&quot;.a+8(SP)</code>: Go要求每个参数都通过栈来传递，这部分空间由 caller 在其栈帧(stack frame)上提供。<br>调用其它过程之前，caller 就需要按照参数和返回变量的大小来对应地增长(返回后收缩)栈。<br>Go编译器不会生成任何 PUSH/POP 族的指令: 栈的增长和收缩是通过在栈指针寄存器<code>SP</code>上分别执行减法和加法指令来实现的。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0x0000 	MOVL	    &quot;&quot;.b+12(SP), AX</span><br><span class="line">0x0004 	MOVL	    &quot;&quot;.a+8(SP), CX</span><br></pre></td></tr></table></figure>
+
+<p>  这里之所以是<code>+8</code>和 <code>+12</code>，原因也是栈中最后会压入一个返回的地址。</p>
+   <!-- > SP伪寄存器是虚拟的栈指针，用于引用帧局部变量以及为函数调用准备的参数。 它指向局部栈帧的顶部，所以应用应该使用负的偏移且范围在[-framesize, 0): x-8(SP), y-4(SP), 等等。 -->
+
+  <!-- > The SP pseudo-register is a virtual stack pointer used to refer to frame-local variables and the arguments being prepared for function calls. It points to the top of the local stack frame, so references should use negative offsets in the range [−framesize, 0): x-8(SP), y-4(SP), and so on. -->
+
+  <!-- `"".b+12(SP)`和`"".a+8(SP)`分别指向栈的低`12`字节和低`8`字节位置(记住: 栈是向低位地址方向增长的！)。`.a`和`.b`是分配给引用地址的任意别名；尽管*它们没有任何语义上的含义*，但在使用虚拟寄存器和相对地址时，这种别名是需要强制使用的。 虚拟寄存器帧指针(frame-pointer)的文档对此有所提及:
+  > FP伪寄存器是虚拟的帧指针，用来对函数的参数做参考。编译器维护虚拟帧指针并将栈中 的参数作为该伪寄存器的偏移量。因此0(FP)是函数的第一个参数，8(FP)是第二个(在64 位机器上)，等等。然而，当使用这种方式应用函数参数时，必须在开始的位置放置一个 名称，比如first_arg+0(FP) 以及 second_arg+8(FP). (偏移————相对于帧指针的偏 移————的意义是与SB中的偏移不一样的，它是相对于符号的偏移。)汇编器强制执行这种 约定，拒绝纯0(FP)以及8(FP)。实际名称与语义不想关，但应该用来记录参数的名字。 -->
+
+  <!-- > The FP pseudo-register is a virtual frame pointer used to refer to function arguments. The compilers maintain a virtual frame pointer and refer to the arguments on the stack as offsets from that pseudo-register. Thus 0(FP) is the first argument to the function, 8(FP) is the second (on a 64-bit machine), and so on. However, when referring to a function argument this way, it is necessary to place a name at the beginning, as in first_arg+0(FP) and second_arg+8(FP). (The meaning of the offset —offset from the frame pointer— distinct from its use with SB, where it is an offset from the symbol.) The assembler enforces this convention, rejecting plain 0(FP) and 8(FP). The actual name is semantically irrelevant but should be used to document the argument's name. -->
+
+</li>
+</ul>
+<h1 id="Dissecting-quot-main-quot"><a href="#Dissecting-quot-main-quot" class="headerlink" title="Dissecting &quot;main&quot;"></a>Dissecting <code>&quot;main&quot;</code></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">0x0000 	TEXT	    &quot;&quot;.main(SB), ABIInternal, $24-0</span><br><span class="line">0x0000 	MOVQ	    (TLS), CX</span><br><span class="line">0x0009 	CMPQ	    SP, 16(CX)</span><br><span class="line">0x000d 	JLS	58</span><br><span class="line">0x000f 	SUBQ	    $24, SP</span><br><span class="line">0x0013 	MOVQ	    BP, 16(SP)</span><br><span class="line">0x0018 	LEAQ	    16(SP), BP</span><br><span class="line">0x001d 	FUNCDATA ....</span><br><span class="line">0x001d 	PCDATA	    $2, $0</span><br><span class="line">0x001d 	PCDATA	    $0, $0</span><br><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br><span class="line">0x002b 	CALL	    &quot;&quot;.add(SB)</span><br><span class="line">0x0030 	MOVQ	    16(SP), BP</span><br><span class="line">0x0035 	ADDQ	    $24, SP</span><br><span class="line">0x0039 	RET</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>SUBQ $24, SP</code>：分配24bytes的栈帧，不用push和pop调整栈的大小，而是直接计算SP寄存器的值。</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br></pre></td></tr></table></figure>
+
+<p><code>137438953482</code>该值表示了10和32两个4bytes值的组合：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">'obase=2;137438953482'</span> | bc</span></span><br><span class="line">10000000000000000000000000000000001010</span><br><span class="line">\_____/\_____________________________/</span><br><span class="line">   32                             10</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>CALL &quot;&quot;.add(SB)</code>：CALL命令不只会跳转，还会将SP寄存器减8（64位 地址大小），而后将此处的地址，即函数返回地址，保存进<code>0(SP)</code>的位置。使用static-base指针的偏移量，来对<code>add</code></p>
+</li>
+<li><p><code>0x0030</code>处指令执行之前的栈情况：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">  |    +-------------------------+ &lt;-- 32(SP)              </span><br><span class="line">  |    |                         |                         </span><br><span class="line">G |    |                         |                         </span><br><span class="line">R |    |                         |                         </span><br><span class="line">O |    | main.main&apos;s saved       |                         </span><br><span class="line">W |    |     frame-pointer (BP)  |                         </span><br><span class="line">S |    |-------------------------| &lt;-- 24(SP)              </span><br><span class="line">  |    |      [alignment]        |                         </span><br><span class="line">D |    | &quot;&quot;.~r3 (bool) = 1/true  | &lt;-- 21(SP)              </span><br><span class="line">O |    |-------------------------| &lt;-- 20(SP)              </span><br><span class="line">W |    |                         |                         </span><br><span class="line">N |    | &quot;&quot;.~r2 (int32) = 42     |                         </span><br><span class="line">W |    |-------------------------| &lt;-- 16(SP)              </span><br><span class="line">A |    |                         |                         </span><br><span class="line">R |    | &quot;&quot;.b (int32) = 32       |                         </span><br><span class="line">D |    |-------------------------| &lt;-- 12(SP)              </span><br><span class="line">S |    |                         |                         </span><br><span class="line">  |    | &quot;&quot;.a (int32) = 10       |                         </span><br><span class="line">  |    |-------------------------| &lt;-- 8(SP)               </span><br><span class="line">  |    |                         |                         </span><br><span class="line">  |    |                         |                         </span><br><span class="line">  |    |                         |                         </span><br><span class="line">\ | /  | return address to       |                         </span><br><span class="line"> \|/   |     main.main + 0x30    |                         </span><br><span class="line">  -    +-------------------------+ &lt;-- 0(SP) (TOP OF STACK)</span><br><span class="line"></span><br><span class="line">(diagram made with https://textik.com)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://github.com/teh-cmc/go-internals" target="_blank" rel="noopener">go-internals[chapter1]</a></li>
+<li><a href="http://xargin.com/plan9-assembly/" target="_blank" rel="noopener">Go系列文章3:plan9汇编入门</a></li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/golang/" rel="tag"># golang</a>
+          
+            <a href="/tags/后端/" rel="tag"># 后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/category/【golang】Go汇编入门1/" rel="next" title="【golang】Go汇编入门1">
+                <i class="fa fa-chevron-left"></i> 【golang】Go汇编入门1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/category/字节跳动-实习经历/" rel="prev" title="字节跳动 实习经历">
+                字节跳动 实习经历 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="ZChen">
+            
+              <p class="site-author-name" itemprop="name">ZChen</p>
+              <div class="site-description motion-element" itemprop="description">这是一个用于记录我个人学习历程的小站。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/chendante" title="GitHub &rarr; https://github.com/chendante" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#样例程序"><span class="nav-number">1.</span> <span class="nav-text">样例程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dissecting-quot-add-quot"><span class="nav-number">2.</span> <span class="nav-text">Dissecting &quot;add&quot;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dissecting-quot-main-quot"><span class="nav-number">3.</span> <span class="nav-text">Dissecting &quot;main&quot;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZChen</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.2.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
