@@ -1,112 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>【golang】Go汇编入门2</title>
-    <url>/category/%E3%80%90golang%E3%80%91Go%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A82/</url>
-    <content><![CDATA[<p>这是<code>Go汇编入门</code>的第二篇文章，也是计划中的最后一篇。第一篇的地址：<a href="../ZChen-blog.github.io/category/【golang】Go汇编入门1/">【golang】Go汇编入门1</a>。</p>
-<p>这一章中，将会用一个go汇编入门常用的样例程序，来进一步了解Go汇编。</p>
-<h1 id="样例程序"><a href="#样例程序" class="headerlink" title="样例程序"></a>样例程序</h1><figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="comment">//go:noinline</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(a, b <span class="keyword">int32</span>)</span> <span class="params">(<span class="keyword">int32</span>, <span class="keyword">bool</span>)</span></span> &#123; <span class="keyword">return</span> a + b, <span class="literal">true</span> &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123; add(<span class="number">10</span>, <span class="number">32</span>) &#125;</span><br></pre></td></tr></table></figure>
+    <title>Docker 常用命令和使用规范</title>
+    <url>/category/Docker-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%92%8C%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p>本文只列举一些最常规使用的<code>Docker</code>命令，更多命令和详情可见<a href="https://docs.docker.com/" target="_blank" rel="noopener">Docker Docs</a>或自行谷歌。</p>
+<h1 id="查询命令"><a href="#查询命令" class="headerlink" title="查询命令"></a>查询命令</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 查询当前用户id</span><br><span class="line">$ id -u</span><br><span class="line"></span><br><span class="line">// 查看运行中的全部容器</span><br><span class="line">$ docker ps</span><br><span class="line">// 查看全部容器，包括停止运行的</span><br><span class="line">$ docker ps -a</span><br><span class="line"></span><br><span class="line">// 查看全部镜像</span><br><span class="line">$ docker images</span><br></pre></td></tr></table></figure>
 
-<p><code>//go:noinline</code>是编译器指令，不可省略（而且甚至<code>//</code>和<code>go</code>中间不能有空格）。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> go version</span><br><span class="line">go version go1.12.6 darwin/amd64</span><br><span class="line"><span class="meta">$</span> GOOS=linux GOARCH=amd64 go tool compile -S main.go &gt; main.s</span><br></pre></td></tr></table></figure>
+<h1 id="运行命令"><a href="#运行命令" class="headerlink" title="运行命令"></a>运行命令</h1><h2 id="1-从镜像启动一个容器"><a href="#1-从镜像启动一个容器" class="headerlink" title="1. 从镜像启动一个容器"></a>1. 从镜像启动一个容器</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker run --gpus all --name (lzc_tf) -u (1000) --detach -v (/home/lzc:/tf) -p (8005:8888) (torchflowjup:20200925)</span><br></pre></td></tr></table></figure>
 
-<p>golang交叉编译非常方便，我们这里直接分析Linux下的汇编代码。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x0000  TEXT	    &quot;&quot;.add(SB), NOSPLIT|ABIInternal, $0-16</span><br><span class="line">0x0000 	FUNCDATA	$0, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	FUNCDATA	$1, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	FUNCDATA	$3, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	PCDATA	    $2, $0</span><br><span class="line">0x0000 	PCDATA	    $0, $0</span><br><span class="line">0x0000 	MOVL	    &quot;&quot;.b+12(SP), AX</span><br><span class="line">0x0004 	MOVL	    &quot;&quot;.a+8(SP), CX</span><br><span class="line">0x0008 	ADDL	    CX, AX</span><br><span class="line">0x000a 	MOVL	    AX, &quot;&quot;.~r2+16(SP)</span><br><span class="line">0x000e 	MOVB	    $1, &quot;&quot;.~r3+20(SP)</span><br><span class="line">0x0013 	RET</span><br><span class="line"></span><br><span class="line">0x0000 	TEXT	    &quot;&quot;.main(SB), ABIInternal, $24-0</span><br><span class="line">0x0000 	MOVQ	    (TLS), CX</span><br><span class="line">0x0009 	CMPQ	    SP, 16(CX)</span><br><span class="line">0x000d 	JLS	58</span><br><span class="line">0x000f 	SUBQ	    $24, SP</span><br><span class="line">0x0013 	MOVQ	    BP, 16(SP)</span><br><span class="line">0x0018 	LEAQ	    16(SP), BP</span><br><span class="line">0x001d 	FUNCDATA	$0, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	FUNCDATA	$1, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	FUNCDATA	$3, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	PCDATA	    $2, $0</span><br><span class="line">0x001d 	PCDATA	    $0, $0</span><br><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br><span class="line">0x002b 	CALL	    &quot;&quot;.add(SB)</span><br><span class="line">0x0030 	MOVQ	    16(SP), BP</span><br><span class="line">0x0035 	ADDQ	    $24, SP</span><br><span class="line">0x0039 	RET</span><br></pre></td></tr></table></figure>
-
-<p>以上汇编代码，省略了部分不重要内容。</p>
-<h1 id="Dissecting-quot-add-quot"><a href="#Dissecting-quot-add-quot" class="headerlink" title="Dissecting &quot;add&quot;"></a>Dissecting <code>&quot;add&quot;</code></h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x0000  TEXT &quot;&quot;.add(SB), NOSPLIT|ABIInternal, $0-16</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>0x0000: 当前指令相对于当前函数的偏移量。</p>
-</li>
-<li><p><code>TEXT &quot;&quot;.add</code>: <code>TEXT</code>指令声明了<code>&quot;&quot;.add</code>是<code>.text</code>段(程序代码在运行期会放在内存的<code>.text</code>段中)的一部分，并表明跟在这个声明后的是函数的函数体。 在链接期，<code>&quot;&quot;</code> 这个空字符会被替换为当前的包名: 也就是说，<code>&quot;&quot;.add</code> 在链接到二进制文件后会变成 <code>main.add</code>。</p>
-</li>
-<li><p><code>(SB)</code>:<code>SB</code>是一个虚拟寄存器，保存了静态基地址(static-base) 指针，即我们程序地址空间的开始地址。换句话来讲，它有一个直接的绝对地址: 是一个全局的函数符号。<code>&quot;&quot;.add(SB)</code>表明我们的符号位于某个固定的相对地址空间起始处的偏移位置 (最终是由链接器计算得到的)，也就是它在链接过后，会成为add函数的地址。</p>
-</li>
-<li><p><code>NOSPLIT</code>: 向编译器表明不应该插入<code>stack-split</code>的用来检查栈需要扩张的前导指令。 在我们 add 函数的这种情况下，编译器自己帮我们插入了这个标记。类似的这一系列指令，具体可看<a href="https://golang.org/doc/asm#directives" target="_blank" rel="noopener">[Official] A Quick Guide to Go’s Assembler
-</a>，在这里不做过多介绍。</p>
-</li>
-<li><p><code>$0-16</code>: <code>$0</code>代表即将分配的栈帧大小；而<code>$16</code>指定了调用方传入的参数大小，单位是byte。传入参数大小为16bytes，因为除了两个32位的加数<code>a</code> <code>b</code>，栈中还会保存一个返回地址，在64位系统中，占4bytes。如果NOSPLIT没有被指定，则必须提供参数大小。对于Go原型的汇编函数，go vet会检查参数大小是否正确。</p>
-</li>
-<li><p><code>FUNCDATA</code>: FUNCDATA以及PCDATA指令包含有被垃圾回收所使用的信息；这些指令是被编译器加入的。</p>
-</li>
-<li><p><code>&quot;&quot;.a+8(SP)</code>: Go要求每个参数都通过栈来传递，这部分空间由 caller 在其栈帧(stack frame)上提供。<br>调用其它过程之前，caller 就需要按照参数和返回变量的大小来对应地增长(返回后收缩)栈。<br>Go编译器不会生成任何 PUSH/POP 族的指令: 栈的增长和收缩是通过在栈指针寄存器<code>SP</code>上分别执行减法和加法指令来实现的。</p>
-  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x0000 	MOVL	    &quot;&quot;.b+12(SP), AX</span><br><span class="line">0x0004 	MOVL	    &quot;&quot;.a+8(SP), CX</span><br></pre></td></tr></table></figure>
-
-<p>  这里之所以是<code>+8</code>和 <code>+12</code>，原因也是栈中最后会压入一个返回的地址。</p>
-   <!-- > SP伪寄存器是虚拟的栈指针，用于引用帧局部变量以及为函数调用准备的参数。 它指向局部栈帧的顶部，所以应用应该使用负的偏移且范围在[-framesize, 0): x-8(SP), y-4(SP), 等等。 -->
-
-  <!-- > The SP pseudo-register is a virtual stack pointer used to refer to frame-local variables and the arguments being prepared for function calls. It points to the top of the local stack frame, so references should use negative offsets in the range [−framesize, 0): x-8(SP), y-4(SP), and so on. -->
-
-  <!-- `"".b+12(SP)`和`"".a+8(SP)`分别指向栈的低`12`字节和低`8`字节位置(记住: 栈是向低位地址方向增长的！)。`.a`和`.b`是分配给引用地址的任意别名；尽管*它们没有任何语义上的含义*，但在使用虚拟寄存器和相对地址时，这种别名是需要强制使用的。 虚拟寄存器帧指针(frame-pointer)的文档对此有所提及:
-  > FP伪寄存器是虚拟的帧指针，用来对函数的参数做参考。编译器维护虚拟帧指针并将栈中 的参数作为该伪寄存器的偏移量。因此0(FP)是函数的第一个参数，8(FP)是第二个(在64 位机器上)，等等。然而，当使用这种方式应用函数参数时，必须在开始的位置放置一个 名称，比如first_arg+0(FP) 以及 second_arg+8(FP). (偏移————相对于帧指针的偏 移————的意义是与SB中的偏移不一样的，它是相对于符号的偏移。)汇编器强制执行这种 约定，拒绝纯0(FP)以及8(FP)。实际名称与语义不想关，但应该用来记录参数的名字。 -->
-
-  <!-- > The FP pseudo-register is a virtual frame pointer used to refer to function arguments. The compilers maintain a virtual frame pointer and refer to the arguments on the stack as offsets from that pseudo-register. Thus 0(FP) is the first argument to the function, 8(FP) is the second (on a 64-bit machine), and so on. However, when referring to a function argument this way, it is necessary to place a name at the beginning, as in first_arg+0(FP) and second_arg+8(FP). (The meaning of the offset —offset from the frame pointer— distinct from its use with SB, where it is an offset from the symbol.) The assembler enforces this convention, rejecting plain 0(FP) and 8(FP). The actual name is semantically irrelevant but should be used to document the argument's name. -->
-
-</li>
-</ul>
-<h1 id="Dissecting-quot-main-quot"><a href="#Dissecting-quot-main-quot" class="headerlink" title="Dissecting &quot;main&quot;"></a>Dissecting <code>&quot;main&quot;</code></h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x0000 	TEXT	    &quot;&quot;.main(SB), ABIInternal, $24-0</span><br><span class="line">0x0000 	MOVQ	    (TLS), CX</span><br><span class="line">0x0009 	CMPQ	    SP, 16(CX)</span><br><span class="line">0x000d 	JLS	58</span><br><span class="line">0x000f 	SUBQ	    $24, SP</span><br><span class="line">0x0013 	MOVQ	    BP, 16(SP)</span><br><span class="line">0x0018 	LEAQ	    16(SP), BP</span><br><span class="line">0x001d 	FUNCDATA ....</span><br><span class="line">0x001d 	PCDATA	    $2, $0</span><br><span class="line">0x001d 	PCDATA	    $0, $0</span><br><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br><span class="line">0x002b 	CALL	    &quot;&quot;.add(SB)</span><br><span class="line">0x0030 	MOVQ	    16(SP), BP</span><br><span class="line">0x0035 	ADDQ	    $24, SP</span><br><span class="line">0x0039 	RET</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>SUBQ $24, SP</code>：分配24bytes的栈帧，不用push和pop调整栈的大小，而是直接计算SP寄存器的值。</p>
-</li>
-<li><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br></pre></td></tr></table></figure>
-
-<p><code>137438953482</code>该值表示了10和32两个4bytes值的组合：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> echo 'obase=2;137438953482' | bc</span><br><span class="line">10000000000000000000000000000000001010</span><br><span class="line">\_____/\_____________________________/</span><br><span class="line">   32                             10</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>CALL &quot;&quot;.add(SB)</code>：CALL命令不只会跳转，还会将SP寄存器减8（64位 地址大小），而后将此处的地址，即函数返回地址，保存进<code>0(SP)</code>的位置。使用static-base指针的偏移量，来对<code>add</code></p>
-</li>
-<li><p><code>0x0030</code>处指令执行之前的栈情况：</p>
-  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">  |    +-------------------------+ &lt;-- 32(SP)              </span><br><span class="line">  |    |                         |                         </span><br><span class="line">G |    |                         |                         </span><br><span class="line">R |    |                         |                         </span><br><span class="line">O |    | main.main&apos;s saved       |                         </span><br><span class="line">W |    |     frame-pointer (BP)  |                         </span><br><span class="line">S |    |-------------------------| &lt;-- 24(SP)              </span><br><span class="line">  |    |      [alignment]        |                         </span><br><span class="line">D |    | &quot;&quot;.~r3 (bool) = 1/true  | &lt;-- 21(SP)              </span><br><span class="line">O |    |-------------------------| &lt;-- 20(SP)              </span><br><span class="line">W |    |                         |                         </span><br><span class="line">N |    | &quot;&quot;.~r2 (int32) = 42     |                         </span><br><span class="line">W |    |-------------------------| &lt;-- 16(SP)              </span><br><span class="line">A |    |                         |                         </span><br><span class="line">R |    | &quot;&quot;.b (int32) = 32       |                         </span><br><span class="line">D |    |-------------------------| &lt;-- 12(SP)              </span><br><span class="line">S |    |                         |                         </span><br><span class="line">  |    | &quot;&quot;.a (int32) = 10       |                         </span><br><span class="line">  |    |-------------------------| &lt;-- 8(SP)               </span><br><span class="line">  |    |                         |                         </span><br><span class="line">  |    |                         |                         </span><br><span class="line">  |    |                         |                         </span><br><span class="line">\ | /  | return address to       |                         </span><br><span class="line"> \|/   |     main.main + 0x30    |                         </span><br><span class="line">  -    +-------------------------+ &lt;-- 0(SP) (TOP OF STACK)</span><br><span class="line"></span><br><span class="line">(diagram made with https://textik.com)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://github.com/teh-cmc/go-internals" target="_blank" rel="noopener">go-internals[chapter1]</a></li>
-<li><a href="http://xargin.com/plan9-assembly/" target="_blank" rel="noopener">Go系列文章3:plan9汇编入门</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>golang</tag>
-        <tag>后端</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【Golang】Channel&amp;Context 应用实例</title>
-    <url>/category/%E3%80%90Golang%E3%80%91Channel-Context-%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B/</url>
-    <content><![CDATA[<p>本文将用一个实际应用中的例子来理解如何使用 Golang 的Channel和Context。</p>
-<h1 id="Golang-Channel"><a href="#Golang-Channel" class="headerlink" title="Golang Channel"></a>Golang Channel</h1><p>需求：</p>
+<p>该命令会将一个镜像启动为一个在后台持续运行的容器。</p>
 <blockquote>
-<ul>
-<li>根据ID列表，从数据库中捞取ID对应数据</li>
-<li>每条SQL语句最多可取一定量(BatchLimit)的id数据</li>
-<li>最多同时(ParallelLimit)条SQL打到数据库</li>
-</ul>
+<p>该命令中被括住的部分都需要调整为自己合适的参数，从左到右依次解释如下：</p>
+<ol>
+<li><code>lzc_tf</code>: 为容器起的名称，命名时加上自己用户名前缀，防止被误删</li>
+<li><code>1000</code>: 用户id，id查询方法见上文</li>
+<li><code>/home/lzc:/tf</code>: 将容器内文件夹与宿主机文件夹相关联，根据自己需求替换左侧路径</li>
+<li><code>8005:8888</code>: 将容器端口转换到所需端口，需替换左侧端口，将端口号末尾两位设为自己座位号</li>
+<li><code>torchflowjup:20200925</code>: 镜像Repository+version，查看方法见上文，这个例子是一个我已经配好了pytorch、tensorflow和jupyter的镜像，大家可以直接用。</li>
+</ol>
 </blockquote>
-<p>先放代码：</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParallelGet</span><span class="params">(ids []<span class="keyword">int64</span>, BatchLimit <span class="keyword">int</span>, ParallelLimit <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span>&#123;</span><br><span class="line">	idsChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> begin := <span class="number">0</span>; begin &lt; <span class="built_in">len</span>(ids); begin += BatchLimit &#123;</span><br><span class="line">			idsChannel &lt;- ids[begin:mathutil.Min(begin+BatchLimit, <span class="built_in">len</span>(ids))]</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">close</span>(idsChannel)</span><br><span class="line">	&#125;()</span><br><span class="line">	resChannel, errChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit), <span class="built_in">make</span>(<span class="keyword">chan</span> error, ParallelLimit)</span><br><span class="line">	stopCh := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ParallelLimit; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> util.RecoverFromPanic()</span><br><span class="line">			<span class="keyword">for</span> pIds := <span class="keyword">range</span> idsChannel &#123;</span><br><span class="line">				data, err := multiGetFromDataSet(pIds)</span><br><span class="line">				<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">					errChannel &lt;- err</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">select</span> &#123;</span><br><span class="line">				<span class="keyword">case</span> resChannel &lt;- data:</span><br><span class="line">				<span class="keyword">case</span> &lt;-stopCh:</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">	&#125;</span><br><span class="line">	totalBatchNum, count := (<span class="built_in">len</span>(ids) - <span class="number">1</span>) / BatchLimit + <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">	res := <span class="built_in">make</span>([]<span class="keyword">int64</span>, <span class="number">0</span>)</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> err := &lt;-errChannel:</span><br><span class="line">			<span class="built_in">close</span>(stopCh)</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">		<span class="keyword">case</span> pRes := &lt;-resChannel:</span><br><span class="line">			res = <span class="built_in">append</span>(res, pRes...)</span><br><span class="line">			count ++</span><br><span class="line">			<span class="keyword">if</span> count == totalBatchNum &#123;</span><br><span class="line">				<span class="built_in">close</span>(stopCh)</span><br><span class="line">				<span class="keyword">return</span> res, <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-在容器中启动bash-shell-会话"><a href="#2-在容器中启动bash-shell-会话" class="headerlink" title="2. 在容器中启动bash shell 会话"></a>2. 在容器中启动<code>bash shell</code> 会话</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it (lzc_tf) bash</span><br></pre></td></tr></table></figure>
 
-<h2 id="用channel来通信！"><a href="#用channel来通信！" class="headerlink" title="用channel来通信！"></a>用channel来通信！</h2><p>「不要用共享内存来通信，而要用通信来共享内存」，这句Golang社区广受推崇的设计理念，对Golang而言更确切说法应为：「应当使用Channel来在Goroutine间同步信息，而不是多个Goroutine直接共享内存」。<br>这句话可以被看作是Golang社区的一句自夸——golang channel的设计使得其比共享内存更易用。<br>Channel的特性配合Select语法糖，令其在多协程消息传递方面变得十分易用。</p>
-<h2 id="如何关闭-channel？"><a href="#如何关闭-channel？" class="headerlink" title="如何关闭 channel？"></a>如何关闭 channel？</h2><p>对于channel的关闭，需要知道的可以总结为一个知识点：<br><strong>「channel的关闭是一种消息传递方式而非一项必须做的任务」</strong>，channel就算不关闭，当不再能被访问时，也会被GC回收。<br>以及一项实践原则：<br><strong>「只有唯一发送者可关闭channel」</strong>。</p>
-<p>对于这一点更为细致的讲解可参考：<a href="https://go101.org/article/channel-closing.html" target="_blank" rel="noopener">How to Gracefully Close Channels</a>,<a href="https://www.jianshu.com/p/d24dfbb33781" target="_blank" rel="noopener">(中译)</a>。</p>
-<p>在该指导原则下，对channel的关闭可以分为三种情况：一写；多写一读；多写多读。</p>
-<ul>
-<li>一写多读/一读: 这种情况很简单，在单独的写协程处，写完直接关闭channel即可。这种情况对应该例子中的idsChannel。读协程直接for+range即可获取到关闭消息。</li>
-<li>多写一读: 这种情况下不能关闭channel来通知写协程退出，因此需要多一个channel来发送退出消息。对应resChannel，通知channel为StopCh。<h1 id="Golang-Context"><a href="#Golang-Context" class="headerlink" title="Golang Context"></a>Golang Context</h1></li>
-</ul>
-<p>Golang Context的作用：用于通知协程退出的方法，可以传递一定的上下文信息。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>golang</tag>
-        <tag>后端</tag>
-      </tags>
+<blockquote>
+<p><code>lzc_tf</code>：替换为自己运行容器的名称</p>
+</blockquote>
+<p>该会话可用<code>exit</code>命令退出。</p>
+<h2 id="3-启动停止运行的容器"><a href="#3-启动停止运行的容器" class="headerlink" title="3. 启动停止运行的容器"></a>3. 启动停止运行的容器</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker start (lzc_tf)</span><br></pre></td></tr></table></figure>
+
+<h1 id="停止和删除命令"><a href="#停止和删除命令" class="headerlink" title="停止和删除命令"></a>停止和删除命令</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 1. 停止运行一个容器</span><br><span class="line">$ docker stop (lzc_tf)</span><br><span class="line"></span><br><span class="line">// 2. 删除某个停止运行的容器</span><br><span class="line">$ docker rm (lzc_tf)</span><br></pre></td></tr></table></figure>
+
+<h1 id="常用操作流程"><a href="#常用操作流程" class="headerlink" title="常用操作流程"></a>常用操作流程</h1><p>这些命令堆积起来看似很麻烦，但其实 Docker 的使用很简单，将自己常用的命令参数填好保存，每次复制重用即可。</p>
+<p>以下是在我们使用Docker来做深度学习任务时，常用的操作流程。</p>
+<h2 id="第一次使用"><a href="#第一次使用" class="headerlink" title="第一次使用"></a>第一次使用</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 从镜像启动一个容器</span><br><span class="line">$ docker run --gpus all --name (lzc_tf) -u (1000) --detach -v (/home/lzc:/tf) -p (8005:8888) (torchflowjup:20200925)</span><br><span class="line"></span><br><span class="line">// 在容器中启动 bash shell 会话</span><br><span class="line">$ docker <span class="built_in">exec</span> -it (lzc_tf) bash</span><br><span class="line"></span><br><span class="line">// 查询 jupyter notebook 的 token</span><br><span class="line">/tf &gt; jupyter notebook list</span><br><span class="line">// 或运行python程序</span><br><span class="line">/tf &gt; python xxx.py</span><br><span class="line"></span><br><span class="line">// 退出容器会话</span><br><span class="line">/tf &gt; <span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line">// 停止运行容器</span><br><span class="line">$ docker stop (lzc_tf)</span><br></pre></td></tr></table></figure>
+
+<h2 id="重复使用"><a href="#重复使用" class="headerlink" title="重复使用"></a>重复使用</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 运行容器</span><br><span class="line">$ docker start (lzc_tf)</span><br><span class="line"></span><br><span class="line">// 在容器中启动 bash shell 会话</span><br><span class="line">$ docker <span class="built_in">exec</span> -it (lzc_tf) bash</span><br><span class="line"></span><br><span class="line">// 运行程序或Jupyter Notebook 同上</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">// 停止运行容器</span><br><span class="line">$ docker stop (lzc_tf)</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
     <title>【golang】Go汇编入门1</title>
@@ -173,41 +100,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker 常用命令和使用规范</title>
-    <url>/category/Docker-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%92%8C%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p>本文只列举一些最常规使用的<code>Docker</code>命令，更多命令和详情可见<a href="https://docs.docker.com/" target="_blank" rel="noopener">Docker Docs</a>或自行谷歌。</p>
-<h1 id="查询命令"><a href="#查询命令" class="headerlink" title="查询命令"></a>查询命令</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 查询当前用户id</span><br><span class="line">$ id -u</span><br><span class="line"></span><br><span class="line">// 查看运行中的全部容器</span><br><span class="line">$ docker ps</span><br><span class="line">// 查看全部容器，包括停止运行的</span><br><span class="line">$ docker ps -a</span><br><span class="line"></span><br><span class="line">// 查看全部镜像</span><br><span class="line">$ docker images</span><br></pre></td></tr></table></figure>
-
-<h1 id="运行命令"><a href="#运行命令" class="headerlink" title="运行命令"></a>运行命令</h1><h2 id="1-从镜像启动一个容器"><a href="#1-从镜像启动一个容器" class="headerlink" title="1. 从镜像启动一个容器"></a>1. 从镜像启动一个容器</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker run --gpus all --name (lzc_tf) -u (1000) --detach -v (/home/lzc:/tf) -p (8005:8888) (torchflowjup:20200925)</span><br></pre></td></tr></table></figure>
-
-<p>该命令会将一个镜像启动为一个在后台持续运行的容器。</p>
-<blockquote>
-<p>该命令中被括住的部分都需要调整为自己合适的参数，从左到右依次解释如下：</p>
-<ol>
-<li><code>lzc_tf</code>: 为容器起的名称，命名时加上自己用户名前缀，防止被误删</li>
-<li><code>1000</code>: 用户id，id查询方法见上文</li>
-<li><code>/home/lzc:/tf</code>: 将容器内文件夹与宿主机文件夹相关联，根据自己需求替换左侧路径</li>
-<li><code>8005:8888</code>: 将容器端口转换到所需端口，需替换左侧端口，将端口号末尾两位设为自己座位号</li>
-<li><code>torchflowjup:20200925</code>: 镜像Repository+version，查看方法见上文，这个例子是一个我已经配好了pytorch、tensorflow和jupyter的镜像，大家可以直接用。</li>
-</ol>
-</blockquote>
-<h2 id="2-在容器中启动bash-shell-会话"><a href="#2-在容器中启动bash-shell-会话" class="headerlink" title="2. 在容器中启动bash shell 会话"></a>2. 在容器中启动<code>bash shell</code> 会话</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it (lzc_tf) bash</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>lzc_tf</code>：替换为自己运行容器的名称</p>
-</blockquote>
-<p>该会话可用<code>exit</code>命令退出。</p>
-<h2 id="3-启动停止运行的容器"><a href="#3-启动停止运行的容器" class="headerlink" title="3. 启动停止运行的容器"></a>3. 启动停止运行的容器</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ docker start (lzc_tf)</span><br></pre></td></tr></table></figure>
-
-<h1 id="停止和删除命令"><a href="#停止和删除命令" class="headerlink" title="停止和删除命令"></a>停止和删除命令</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 1. 停止运行一个容器</span><br><span class="line">$ docker stop (lzc_tf)</span><br><span class="line"></span><br><span class="line">// 2. 删除某个停止运行的容器</span><br><span class="line">$ docker rm (lzc_tf)</span><br></pre></td></tr></table></figure>
-
-<h1 id="常用操作流程"><a href="#常用操作流程" class="headerlink" title="常用操作流程"></a>常用操作流程</h1><p>这些命令堆积起来看似很麻烦，但其实 Docker 的使用很简单，将自己常用的命令参数填好保存，每次复制重用即可。</p>
-<p>以下是在我们使用Docker来做深度学习任务时，常用的操作流程。</p>
-<h2 id="第一次使用"><a href="#第一次使用" class="headerlink" title="第一次使用"></a>第一次使用</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 从镜像启动一个容器</span><br><span class="line">$ docker run --gpus all --name (lzc_tf) -u (1000) --detach -v (/home/lzc:/tf) -p (8005:8888) (torchflowjup:20200925)</span><br><span class="line"></span><br><span class="line">// 在容器中启动 bash shell 会话</span><br><span class="line">$ docker <span class="built_in">exec</span> -it (lzc_tf) bash</span><br><span class="line"></span><br><span class="line">// 查询 jupyter notebook 的 token</span><br><span class="line">/tf &gt; jupyter notebook list</span><br><span class="line">// 或运行python程序</span><br><span class="line">/tf &gt; python xxx.py</span><br><span class="line"></span><br><span class="line">// 退出容器会话</span><br><span class="line">/tf &gt; <span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line">// 停止运行容器</span><br><span class="line">$ docker stop (lzc_tf)</span><br></pre></td></tr></table></figure>
-
-<h2 id="重复使用"><a href="#重复使用" class="headerlink" title="重复使用"></a>重复使用</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 运行容器</span><br><span class="line">$ docker start (lzc_tf)</span><br><span class="line"></span><br><span class="line">// 在容器中启动 bash shell 会话</span><br><span class="line">$ docker <span class="built_in">exec</span> -it (lzc_tf) bash</span><br><span class="line"></span><br><span class="line">// 运行程序或Jupyter Notebook 同上</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">// 停止运行容器</span><br><span class="line">$ docker stop (lzc_tf)</span><br></pre></td></tr></table></figure>]]></content>
-  </entry>
-  <entry>
     <title>【golang】理解interface</title>
     <url>/category/%E3%80%90golang%E3%80%91%E7%90%86%E8%A7%A3interface/</url>
     <content><![CDATA[<h1 id="一、interface基本概念"><a href="#一、interface基本概念" class="headerlink" title="一、interface基本概念"></a>一、interface基本概念</h1><blockquote>
@@ -245,45 +137,6 @@
       <tags>
         <tag>golang</tag>
         <tag>后端</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【李宏毅 机器学习】Bert</title>
-    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Bert/</url>
-    <content><![CDATA[<p>word embedding 对于相同word type不同word token的词会有相同的embedding。(river bank, money bank)</p>
-<h1 id="Contextualized-Word-Embedding"><a href="#Contextualized-Word-Embedding" class="headerlink" title="Contextualized Word Embedding"></a>Contextualized Word Embedding</h1><ul>
-<li>Each word token has its own embedding(even though it has the same word type)</li>
-<li>The embeddings of word tokens also depend on its context</li>
-</ul>
-<h1 id="Embeddings-from-Language-Model-ELMO"><a href="#Embeddings-from-Language-Model-ELMO" class="headerlink" title="Embeddings from Language Model (ELMO)"></a>Embeddings from Language Model (ELMO)</h1><p>RNN-based language models. 用RNN来训练，预测每个词的下一个词。RNN的中间层输出作为word embedding。因此当句子中的词得到embedding时，包含有上文信息。</p>
-<p>为了获取下文信息，还要训练一个反向的RNN。将两个embedding接起来作为最终结果。</p>
-<p>Q:选取那一层RNN的输出？</p>
-<h1 id="Bidirectional-Encoder-Representation-from-Transformers-BERT"><a href="#Bidirectional-Encoder-Representation-from-Transformers-BERT" class="headerlink" title="Bidirectional Encoder Representation from Transformers (BERT)"></a>Bidirectional Encoder Representation from Transformers (BERT)</h1><p>BERT = Encoder of Transformer</p>
-<p>输入一个句子，得到一串embedding每个embedding对应一个word(用BERT处理中文时，用字比用词可能更好)。</p>
-<p>训练方法：</p>
-<ol>
-<li><p>Masked LM: 将句子中15%的词遮盖（mask标志代替），通过BERT后，mask标志的embedding 用Linear Multi-class Classifier来预测，得到one-hot vector，使其为对应词。</p>
-</li>
-<li><p>Next Sentence Prediction: [CLS] 的embedding通过Linear Binary Classifier，得到Yes or No。</p>
-</li>
-</ol>
-<blockquote>
-<ul>
-<li>[SEP]: the boundary of two sentences.</li>
-<li>[CLS]: the position that outputs classificiation results.</li>
-</ul>
-</blockquote>
-<p>目前两种方式会同时使用。</p>
-<h1 id="How-to-use-BERT"><a href="#How-to-use-BERT" class="headerlink" title="How to use BERT"></a>How to use BERT</h1><h2 id="How-to-use-BERT-CASE-1"><a href="#How-to-use-BERT-CASE-1" class="headerlink" title="How to use BERT - CASE 1"></a>How to use BERT - CASE 1</h2><p>句子分类。BERT添加[CLS]字段，表示句子类别，输出将进入Linear Multi-class Classifier。BERT部分fined-tune，Classifier从头学。</p>
-<h2 id="How-to-use-BERT-CASE-2"><a href="#How-to-use-BERT-CASE-2" class="headerlink" title="How to use BERT - CASE 2"></a>How to use BERT - CASE 2</h2><p>词分类。BERT需要从头学。同时学习一个Linear CLs。</p>
-<h2 id="How-to-use-BERT-CASE-3"><a href="#How-to-use-BERT-CASE-3" class="headerlink" title="How to use BERT - CASE 3"></a>How to use BERT - CASE 3</h2><p>两个句子分类。</p>
-<h2 id="How-to-use-BERT-CASE-4"><a href="#How-to-use-BERT-CASE-4" class="headerlink" title="How to use BERT - CASE 4"></a>How to use BERT - CASE 4</h2><p>QA</p>
-<h1 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h1><h2 id="Enhanced-Representation-through-Knowledge-Integration-ERNIE"><a href="#Enhanced-Representation-through-Knowledge-Integration-ERNIE" class="headerlink" title="Enhanced Representation through Knowledge Integration (ERNIE)"></a>Enhanced Representation through Knowledge Integration (ERNIE)</h2><p>为中文设计的，可以按照语义mask。避免一个词被部分mask，如“哈x滨是一个美x的城市”，在ERNIE中会“xxx是一个美丽的城市”。</p>
-<h2 id="Generative-Pre-Training-GPT"><a href="#Generative-Pre-Training-GPT" class="headerlink" title="Generative Pre-Training (GPT)"></a>Generative Pre-Training (GPT)</h2><p>GPT-2比ELMO和BERT的训练量（参数）多很多。利用了Transformer的Decoder。</p>
-]]></content>
-      <tags>
-        <tag>machine learning</tag>
-        <tag>李宏毅 机器学习</tag>
       </tags>
   </entry>
   <entry>
@@ -336,23 +189,177 @@
 <li>Effective Modern C++</li>
 </ul>
 <h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><ul>
-<li><p>Java 编程思想: 厚且全</p>
-</li>
-<li><p>Java 并发编程: 相对薄，对并发编程可以有比较全面的理解</p>
-</li>
-<li><p>Effective Java: 进阶书</p>
-</li>
-<li><p>深入理解 Java 虚拟机: JVM 原理，粗略看，对GC有深刻认识即可</p>
-</li>
-<li><p>Maven 实战: 粗略知道即可</p>
-<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1></li>
-<li><p>《Unix网络编程》第一卷 <a href="https://github.com/arkingc/note/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UNIX%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%8D%B71.md" target="_blank" rel="noopener">note</a></p>
-</li>
+<li>Java 编程思想: 厚且全</li>
+<li>Java 并发编程: 相对薄，对并发编程可以有比较全面的理解</li>
+<li>Effective Java: 进阶书</li>
+<li>深入理解 Java 虚拟机: JVM 原理，粗略看，对GC有深刻认识即可</li>
+<li>Maven 实战: 粗略知道即可</li>
+</ul>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><ul>
+<li>《Unix网络编程》第一卷 <a href="https://github.com/arkingc/note/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UNIX%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%8D%B71.md" target="_blank" rel="noopener">note</a></li>
 </ul>
 ]]></content>
       <categories>
         <category>资料</category>
       </categories>
+  </entry>
+  <entry>
+    <title>【李宏毅 机器学习】Bert</title>
+    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Bert/</url>
+    <content><![CDATA[<p>word embedding 对于相同word type不同word token的词会有相同的embedding。(river bank, money bank)</p>
+<h1 id="Contextualized-Word-Embedding"><a href="#Contextualized-Word-Embedding" class="headerlink" title="Contextualized Word Embedding"></a>Contextualized Word Embedding</h1><ul>
+<li>Each word token has its own embedding(even though it has the same word type)</li>
+<li>The embeddings of word tokens also depend on its context</li>
+</ul>
+<h1 id="Embeddings-from-Language-Model-ELMO"><a href="#Embeddings-from-Language-Model-ELMO" class="headerlink" title="Embeddings from Language Model (ELMO)"></a>Embeddings from Language Model (ELMO)</h1><p>RNN-based language models. 用RNN来训练，预测每个词的下一个词。RNN的中间层输出作为word embedding。因此当句子中的词得到embedding时，包含有上文信息。</p>
+<p>为了获取下文信息，还要训练一个反向的RNN。将两个embedding接起来作为最终结果。</p>
+<p>Q:选取那一层RNN的输出？</p>
+<h1 id="Bidirectional-Encoder-Representation-from-Transformers-BERT"><a href="#Bidirectional-Encoder-Representation-from-Transformers-BERT" class="headerlink" title="Bidirectional Encoder Representation from Transformers (BERT)"></a>Bidirectional Encoder Representation from Transformers (BERT)</h1><p>BERT = Encoder of Transformer</p>
+<p>输入一个句子，得到一串embedding每个embedding对应一个word(用BERT处理中文时，用字比用词可能更好)。</p>
+<p>训练方法：</p>
+<ol>
+<li><p>Masked LM: 将句子中15%的词遮盖（mask标志代替），通过BERT后，mask标志的embedding 用Linear Multi-class Classifier来预测，得到one-hot vector，使其为对应词。</p>
+</li>
+<li><p>Next Sentence Prediction: [CLS] 的embedding通过Linear Binary Classifier，得到Yes or No。</p>
+</li>
+</ol>
+<blockquote>
+<ul>
+<li>[SEP]: the boundary of two sentences.</li>
+<li>[CLS]: the position that outputs classificiation results.</li>
+</ul>
+</blockquote>
+<p>目前两种方式会同时使用。</p>
+<h1 id="How-to-use-BERT"><a href="#How-to-use-BERT" class="headerlink" title="How to use BERT"></a>How to use BERT</h1><h2 id="How-to-use-BERT-CASE-1"><a href="#How-to-use-BERT-CASE-1" class="headerlink" title="How to use BERT - CASE 1"></a>How to use BERT - CASE 1</h2><p>句子分类。BERT添加[CLS]字段，表示句子类别，输出将进入Linear Multi-class Classifier。BERT部分fined-tune，Classifier从头学。</p>
+<h2 id="How-to-use-BERT-CASE-2"><a href="#How-to-use-BERT-CASE-2" class="headerlink" title="How to use BERT - CASE 2"></a>How to use BERT - CASE 2</h2><p>词分类。BERT需要从头学。同时学习一个Linear CLs。</p>
+<h2 id="How-to-use-BERT-CASE-3"><a href="#How-to-use-BERT-CASE-3" class="headerlink" title="How to use BERT - CASE 3"></a>How to use BERT - CASE 3</h2><p>两个句子分类。</p>
+<h2 id="How-to-use-BERT-CASE-4"><a href="#How-to-use-BERT-CASE-4" class="headerlink" title="How to use BERT - CASE 4"></a>How to use BERT - CASE 4</h2><p>QA</p>
+<h1 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h1><h2 id="Enhanced-Representation-through-Knowledge-Integration-ERNIE"><a href="#Enhanced-Representation-through-Knowledge-Integration-ERNIE" class="headerlink" title="Enhanced Representation through Knowledge Integration (ERNIE)"></a>Enhanced Representation through Knowledge Integration (ERNIE)</h2><p>为中文设计的，可以按照语义mask。避免一个词被部分mask，如“哈x滨是一个美x的城市”，在ERNIE中会“xxx是一个美丽的城市”。</p>
+<h2 id="Generative-Pre-Training-GPT"><a href="#Generative-Pre-Training-GPT" class="headerlink" title="Generative Pre-Training (GPT)"></a>Generative Pre-Training (GPT)</h2><p>GPT-2比ELMO和BERT的训练量（参数）多很多。利用了Transformer的Decoder。</p>
+]]></content>
+      <tags>
+        <tag>machine learning</tag>
+        <tag>李宏毅 机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【golang】Go汇编入门2</title>
+    <url>/category/%E3%80%90golang%E3%80%91Go%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A82/</url>
+    <content><![CDATA[<p>这是<code>Go汇编入门</code>的第二篇文章，也是计划中的最后一篇。第一篇的地址：<a href="../ZChen-blog.github.io/category/【golang】Go汇编入门1/">【golang】Go汇编入门1</a>。</p>
+<p>这一章中，将会用一个go汇编入门常用的样例程序，来进一步了解Go汇编。</p>
+<h1 id="样例程序"><a href="#样例程序" class="headerlink" title="样例程序"></a>样例程序</h1><figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="comment">//go:noinline</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(a, b <span class="keyword">int32</span>)</span> <span class="params">(<span class="keyword">int32</span>, <span class="keyword">bool</span>)</span></span> &#123; <span class="keyword">return</span> a + b, <span class="literal">true</span> &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123; add(<span class="number">10</span>, <span class="number">32</span>) &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>//go:noinline</code>是编译器指令，不可省略（而且甚至<code>//</code>和<code>go</code>中间不能有空格）。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> go version</span></span><br><span class="line">go version go1.12.6 darwin/amd64</span><br><span class="line"><span class="meta">$</span><span class="bash"> GOOS=linux GOARCH=amd64 go tool compile -S main.go &gt; main.s</span></span><br></pre></td></tr></table></figure>
+
+<p>golang交叉编译非常方便，我们这里直接分析Linux下的汇编代码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x0000  TEXT	    &quot;&quot;.add(SB), NOSPLIT|ABIInternal, $0-16</span><br><span class="line">0x0000 	FUNCDATA	$0, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	FUNCDATA	$1, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	FUNCDATA	$3, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x0000 	PCDATA	    $2, $0</span><br><span class="line">0x0000 	PCDATA	    $0, $0</span><br><span class="line">0x0000 	MOVL	    &quot;&quot;.b+12(SP), AX</span><br><span class="line">0x0004 	MOVL	    &quot;&quot;.a+8(SP), CX</span><br><span class="line">0x0008 	ADDL	    CX, AX</span><br><span class="line">0x000a 	MOVL	    AX, &quot;&quot;.~r2+16(SP)</span><br><span class="line">0x000e 	MOVB	    $1, &quot;&quot;.~r3+20(SP)</span><br><span class="line">0x0013 	RET</span><br><span class="line"></span><br><span class="line">0x0000 	TEXT	    &quot;&quot;.main(SB), ABIInternal, $24-0</span><br><span class="line">0x0000 	MOVQ	    (TLS), CX</span><br><span class="line">0x0009 	CMPQ	    SP, 16(CX)</span><br><span class="line">0x000d 	JLS	58</span><br><span class="line">0x000f 	SUBQ	    $24, SP</span><br><span class="line">0x0013 	MOVQ	    BP, 16(SP)</span><br><span class="line">0x0018 	LEAQ	    16(SP), BP</span><br><span class="line">0x001d 	FUNCDATA	$0, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	FUNCDATA	$1, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	FUNCDATA	$3, gclocals·33cdeccccebe80329f1fdbee7f5874cb(SB)</span><br><span class="line">0x001d 	PCDATA	    $2, $0</span><br><span class="line">0x001d 	PCDATA	    $0, $0</span><br><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br><span class="line">0x002b 	CALL	    &quot;&quot;.add(SB)</span><br><span class="line">0x0030 	MOVQ	    16(SP), BP</span><br><span class="line">0x0035 	ADDQ	    $24, SP</span><br><span class="line">0x0039 	RET</span><br></pre></td></tr></table></figure>
+
+<p>以上汇编代码，省略了部分不重要内容。</p>
+<h1 id="Dissecting-quot-add-quot"><a href="#Dissecting-quot-add-quot" class="headerlink" title="Dissecting &quot;add&quot;"></a>Dissecting <code>&quot;add&quot;</code></h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x0000  TEXT &quot;&quot;.add(SB), NOSPLIT|ABIInternal, $0-16</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>0x0000: 当前指令相对于当前函数的偏移量。</p>
+</li>
+<li><p><code>TEXT &quot;&quot;.add</code>: <code>TEXT</code>指令声明了<code>&quot;&quot;.add</code>是<code>.text</code>段(程序代码在运行期会放在内存的<code>.text</code>段中)的一部分，并表明跟在这个声明后的是函数的函数体。 在链接期，<code>&quot;&quot;</code> 这个空字符会被替换为当前的包名: 也就是说，<code>&quot;&quot;.add</code> 在链接到二进制文件后会变成 <code>main.add</code>。</p>
+</li>
+<li><p><code>(SB)</code>:<code>SB</code>是一个虚拟寄存器，保存了静态基地址(static-base) 指针，即我们程序地址空间的开始地址。换句话来讲，它有一个直接的绝对地址: 是一个全局的函数符号。<code>&quot;&quot;.add(SB)</code>表明我们的符号位于某个固定的相对地址空间起始处的偏移位置 (最终是由链接器计算得到的)，也就是它在链接过后，会成为add函数的地址。</p>
+</li>
+<li><p><code>NOSPLIT</code>: 向编译器表明不应该插入<code>stack-split</code>的用来检查栈需要扩张的前导指令。 在我们 add 函数的这种情况下，编译器自己帮我们插入了这个标记。类似的这一系列指令，具体可看<a href="https://golang.org/doc/asm#directives" target="_blank" rel="noopener">[Official] A Quick Guide to Go’s Assembler
+</a>，在这里不做过多介绍。</p>
+</li>
+<li><p><code>$0-16</code>: <code>$0</code>代表即将分配的栈帧大小；而<code>$16</code>指定了调用方传入的参数大小，单位是byte。传入参数大小为16bytes，因为除了两个32位的加数<code>a</code> <code>b</code>，栈中还会保存一个返回地址，在64位系统中，占4bytes。如果NOSPLIT没有被指定，则必须提供参数大小。对于Go原型的汇编函数，go vet会检查参数大小是否正确。</p>
+</li>
+<li><p><code>FUNCDATA</code>: FUNCDATA以及PCDATA指令包含有被垃圾回收所使用的信息；这些指令是被编译器加入的。</p>
+</li>
+<li><p><code>&quot;&quot;.a+8(SP)</code>: Go要求每个参数都通过栈来传递，这部分空间由 caller 在其栈帧(stack frame)上提供。<br>调用其它过程之前，caller 就需要按照参数和返回变量的大小来对应地增长(返回后收缩)栈。<br>Go编译器不会生成任何 PUSH/POP 族的指令: 栈的增长和收缩是通过在栈指针寄存器<code>SP</code>上分别执行减法和加法指令来实现的。</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x0000 	MOVL	    &quot;&quot;.b+12(SP), AX</span><br><span class="line">0x0004 	MOVL	    &quot;&quot;.a+8(SP), CX</span><br></pre></td></tr></table></figure>
+
+<p>  这里之所以是<code>+8</code>和 <code>+12</code>，原因也是栈中最后会压入一个返回的地址。</p>
+   <!-- > SP伪寄存器是虚拟的栈指针，用于引用帧局部变量以及为函数调用准备的参数。 它指向局部栈帧的顶部，所以应用应该使用负的偏移且范围在[-framesize, 0): x-8(SP), y-4(SP), 等等。 -->
+
+  <!-- > The SP pseudo-register is a virtual stack pointer used to refer to frame-local variables and the arguments being prepared for function calls. It points to the top of the local stack frame, so references should use negative offsets in the range [−framesize, 0): x-8(SP), y-4(SP), and so on. -->
+
+  <!-- `"".b+12(SP)`和`"".a+8(SP)`分别指向栈的低`12`字节和低`8`字节位置(记住: 栈是向低位地址方向增长的！)。`.a`和`.b`是分配给引用地址的任意别名；尽管*它们没有任何语义上的含义*，但在使用虚拟寄存器和相对地址时，这种别名是需要强制使用的。 虚拟寄存器帧指针(frame-pointer)的文档对此有所提及:
+  > FP伪寄存器是虚拟的帧指针，用来对函数的参数做参考。编译器维护虚拟帧指针并将栈中 的参数作为该伪寄存器的偏移量。因此0(FP)是函数的第一个参数，8(FP)是第二个(在64 位机器上)，等等。然而，当使用这种方式应用函数参数时，必须在开始的位置放置一个 名称，比如first_arg+0(FP) 以及 second_arg+8(FP). (偏移————相对于帧指针的偏 移————的意义是与SB中的偏移不一样的，它是相对于符号的偏移。)汇编器强制执行这种 约定，拒绝纯0(FP)以及8(FP)。实际名称与语义不想关，但应该用来记录参数的名字。 -->
+
+  <!-- > The FP pseudo-register is a virtual frame pointer used to refer to function arguments. The compilers maintain a virtual frame pointer and refer to the arguments on the stack as offsets from that pseudo-register. Thus 0(FP) is the first argument to the function, 8(FP) is the second (on a 64-bit machine), and so on. However, when referring to a function argument this way, it is necessary to place a name at the beginning, as in first_arg+0(FP) and second_arg+8(FP). (The meaning of the offset —offset from the frame pointer— distinct from its use with SB, where it is an offset from the symbol.) The assembler enforces this convention, rejecting plain 0(FP) and 8(FP). The actual name is semantically irrelevant but should be used to document the argument's name. -->
+
+</li>
+</ul>
+<h1 id="Dissecting-quot-main-quot"><a href="#Dissecting-quot-main-quot" class="headerlink" title="Dissecting &quot;main&quot;"></a>Dissecting <code>&quot;main&quot;</code></h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x0000 	TEXT	    &quot;&quot;.main(SB), ABIInternal, $24-0</span><br><span class="line">0x0000 	MOVQ	    (TLS), CX</span><br><span class="line">0x0009 	CMPQ	    SP, 16(CX)</span><br><span class="line">0x000d 	JLS	58</span><br><span class="line">0x000f 	SUBQ	    $24, SP</span><br><span class="line">0x0013 	MOVQ	    BP, 16(SP)</span><br><span class="line">0x0018 	LEAQ	    16(SP), BP</span><br><span class="line">0x001d 	FUNCDATA ....</span><br><span class="line">0x001d 	PCDATA	    $2, $0</span><br><span class="line">0x001d 	PCDATA	    $0, $0</span><br><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br><span class="line">0x002b 	CALL	    &quot;&quot;.add(SB)</span><br><span class="line">0x0030 	MOVQ	    16(SP), BP</span><br><span class="line">0x0035 	ADDQ	    $24, SP</span><br><span class="line">0x0039 	RET</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>SUBQ $24, SP</code>：分配24bytes的栈帧，不用push和pop调整栈的大小，而是直接计算SP寄存器的值。</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x001d 	MOVQ	    $137438953482, AX</span><br><span class="line">0x0027 	MOVQ	    AX, (SP)</span><br></pre></td></tr></table></figure>
+
+<p><code>137438953482</code>该值表示了10和32两个4bytes值的组合：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">'obase=2;137438953482'</span> | bc</span></span><br><span class="line">10000000000000000000000000000000001010</span><br><span class="line">\_____/\_____________________________/</span><br><span class="line">   32                             10</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>CALL &quot;&quot;.add(SB)</code>：CALL命令不只会跳转，还会将SP寄存器减8（64位 地址大小），而后将此处的地址，即函数返回地址，保存进<code>0(SP)</code>的位置。使用static-base指针的偏移量，来对<code>add</code></p>
+</li>
+<li><p><code>0x0030</code>处指令执行之前的栈情况：</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">  |    +-------------------------+ &lt;-- 32(SP)              </span><br><span class="line">  |    |                         |                         </span><br><span class="line">G |    |                         |                         </span><br><span class="line">R |    |                         |                         </span><br><span class="line">O |    | main.main&apos;s saved       |                         </span><br><span class="line">W |    |     frame-pointer (BP)  |                         </span><br><span class="line">S |    |-------------------------| &lt;-- 24(SP)              </span><br><span class="line">  |    |      [alignment]        |                         </span><br><span class="line">D |    | &quot;&quot;.~r3 (bool) = 1/true  | &lt;-- 21(SP)              </span><br><span class="line">O |    |-------------------------| &lt;-- 20(SP)              </span><br><span class="line">W |    |                         |                         </span><br><span class="line">N |    | &quot;&quot;.~r2 (int32) = 42     |                         </span><br><span class="line">W |    |-------------------------| &lt;-- 16(SP)              </span><br><span class="line">A |    |                         |                         </span><br><span class="line">R |    | &quot;&quot;.b (int32) = 32       |                         </span><br><span class="line">D |    |-------------------------| &lt;-- 12(SP)              </span><br><span class="line">S |    |                         |                         </span><br><span class="line">  |    | &quot;&quot;.a (int32) = 10       |                         </span><br><span class="line">  |    |-------------------------| &lt;-- 8(SP)               </span><br><span class="line">  |    |                         |                         </span><br><span class="line">  |    |                         |                         </span><br><span class="line">  |    |                         |                         </span><br><span class="line">\ | /  | return address to       |                         </span><br><span class="line"> \|/   |     main.main + 0x30    |                         </span><br><span class="line">  -    +-------------------------+ &lt;-- 0(SP) (TOP OF STACK)</span><br><span class="line"></span><br><span class="line">(diagram made with https://textik.com)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://github.com/teh-cmc/go-internals" target="_blank" rel="noopener">go-internals[chapter1]</a></li>
+<li><a href="http://xargin.com/plan9-assembly/" target="_blank" rel="noopener">Go系列文章3:plan9汇编入门</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>后端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Golang】Channel&amp;Context 应用实例</title>
+    <url>/category/%E3%80%90Golang%E3%80%91Channel-Context-%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B/</url>
+    <content><![CDATA[<p>本文将用一个实际应用中的例子来理解如何使用 Golang 的Channel和Context。</p>
+<h1 id="Golang-Channel"><a href="#Golang-Channel" class="headerlink" title="Golang Channel"></a>Golang Channel</h1><p>需求：</p>
+<blockquote>
+<ul>
+<li>根据ID列表，从数据库中捞取ID对应数据</li>
+<li>每条SQL语句最多可取一定量(BatchLimit)的id数据</li>
+<li>最多同时(ParallelLimit)条SQL打到数据库</li>
+</ul>
+</blockquote>
+<p>先放代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParallelGet</span><span class="params">(ids []<span class="keyword">int64</span>, BatchLimit <span class="keyword">int</span>, ParallelLimit <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span>&#123;</span><br><span class="line">	idsChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> begin := <span class="number">0</span>; begin &lt; <span class="built_in">len</span>(ids); begin += BatchLimit &#123;</span><br><span class="line">			idsChannel &lt;- ids[begin:mathutil.Min(begin+BatchLimit, <span class="built_in">len</span>(ids))]</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">close</span>(idsChannel)</span><br><span class="line">	&#125;()</span><br><span class="line">	resChannel, errChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit), <span class="built_in">make</span>(<span class="keyword">chan</span> error, ParallelLimit)</span><br><span class="line">	stopCh := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ParallelLimit; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> util.RecoverFromPanic()</span><br><span class="line">			<span class="keyword">for</span> pIds := <span class="keyword">range</span> idsChannel &#123;</span><br><span class="line">				data, err := multiGetFromDataSet(pIds)</span><br><span class="line">				<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">					errChannel &lt;- err</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">select</span> &#123;</span><br><span class="line">				<span class="keyword">case</span> resChannel &lt;- data:</span><br><span class="line">				<span class="keyword">case</span> &lt;-stopCh:</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">	&#125;</span><br><span class="line">	totalBatchNum, count := (<span class="built_in">len</span>(ids) - <span class="number">1</span>) / BatchLimit + <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">	res := <span class="built_in">make</span>([]<span class="keyword">int64</span>, <span class="number">0</span>)</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> err := &lt;-errChannel:</span><br><span class="line">			<span class="built_in">close</span>(stopCh)</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">		<span class="keyword">case</span> pRes := &lt;-resChannel:</span><br><span class="line">			res = <span class="built_in">append</span>(res, pRes...)</span><br><span class="line">			count ++</span><br><span class="line">			<span class="keyword">if</span> count == totalBatchNum &#123;</span><br><span class="line">				<span class="built_in">close</span>(stopCh)</span><br><span class="line">				<span class="keyword">return</span> res, <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="用channel来通信！"><a href="#用channel来通信！" class="headerlink" title="用channel来通信！"></a>用channel来通信！</h2><p>「不要用共享内存来通信，而要用通信来共享内存」，这句Golang社区广受推崇的设计理念，对Golang而言更确切说法应为：「应当使用Channel来在Goroutine间同步信息，而不是多个Goroutine直接共享内存」。<br>这句话可以被看作是Golang社区的一句自夸——golang channel的设计使得其比共享内存更易用。<br>Channel的特性配合Select语法糖，令其在多协程消息传递方面变得十分易用。</p>
+<h2 id="如何关闭-channel？"><a href="#如何关闭-channel？" class="headerlink" title="如何关闭 channel？"></a>如何关闭 channel？</h2><p>对于channel的关闭，需要知道的可以总结为一个知识点：<br><strong>「channel的关闭是一种消息传递方式而非一项必须做的任务」</strong>，channel就算不关闭，当不再能被访问时，也会被GC回收。<br>以及一项实践原则：<br><strong>「只有唯一发送者可关闭channel」</strong>。</p>
+<p>对于这一点更为细致的讲解可参考：<a href="https://go101.org/article/channel-closing.html" target="_blank" rel="noopener">How to Gracefully Close Channels</a>,<a href="https://www.jianshu.com/p/d24dfbb33781" target="_blank" rel="noopener">(中译)</a>。</p>
+<p>在该指导原则下，对channel的关闭可以分为三种情况：一写；多写一读；多写多读。</p>
+<ul>
+<li>一写多读/一读: 这种情况很简单，在单独的写协程处，写完直接关闭channel即可。这种情况对应该例子中的idsChannel。读协程直接for+range即可获取到关闭消息。</li>
+<li>多写一读: 这种情况下不能关闭channel来通知写协程退出，因此需要多一个channel来发送退出消息。对应resChannel，通知channel为StopCh。<h1 id="Golang-Context"><a href="#Golang-Context" class="headerlink" title="Golang Context"></a>Golang Context</h1></li>
+</ul>
+<p>Golang Context的作用：用于通知协程退出的方法，可以传递一定的上下文信息。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>后端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【李宏毅-机器学习】GNN</title>
+    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91GNN/</url>
+    <content><![CDATA[<h1 id="Spatial-based-GNN"><a href="#Spatial-based-GNN" class="headerlink" title="Spatial-based GNN"></a>Spatial-based GNN</h1><p>Terminology:</p>
+<p>Aggregate: 用neighbor feature update 下一层的hidden state<br>Readout: 每一层hidden layer 的 node feature 做平均，然后× 矩阵，得到输出</p>
+<h2 id="DCNN-（Diffusion-Convolution-Neural-Network"><a href="#DCNN-（Diffusion-Convolution-Neural-Network" class="headerlink" title="DCNN （Diffusion-Convolution Neural Network)"></a>DCNN （Diffusion-Convolution Neural Network)</h2><h2 id="MoNET-Mixture-Model-Networks"><a href="#MoNET-Mixture-Model-Networks" class="headerlink" title="MoNET (Mixture Model Networks)"></a>MoNET (Mixture Model Networks)</h2><h1 id="Spectral-Graph-Theory"><a href="#Spectral-Graph-Theory" class="headerlink" title="Spectral Graph Theory"></a>Spectral Graph Theory</h1>]]></content>
+      <tags>
+        <tag>machine learning</tag>
+        <tag>李宏毅 机器学习</tag>
+      </tags>
   </entry>
   <entry>
     <title>【李宏毅 机器学习】Transformer</title>
@@ -417,11 +424,32 @@
       </tags>
   </entry>
   <entry>
-    <title>【李宏毅-机器学习】GNN</title>
-    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91GNN/</url>
-    <content><![CDATA[<h1 id="Spatial-based-GNN"><a href="#Spatial-based-GNN" class="headerlink" title="Spatial-based GNN"></a>Spatial-based GNN</h1><p>Terminology:</p>
-<p>Aggregate: 用neighbor feature update 下一层的hidden state<br>Readout: 每一层hidden layer 的 node feature 做平均，然后× 矩阵，得到输出</p>
-<h2 id="DCNN-（Diffusion-Convolution-Neural-Network"><a href="#DCNN-（Diffusion-Convolution-Neural-Network" class="headerlink" title="DCNN （Diffusion-Convolution Neural Network)"></a>DCNN （Diffusion-Convolution Neural Network)</h2><h2 id="MoNET-Mixture-Model-Networks"><a href="#MoNET-Mixture-Model-Networks" class="headerlink" title="MoNET (Mixture Model Networks)"></a>MoNET (Mixture Model Networks)</h2><h1 id="Spectral-Graph-Theory"><a href="#Spectral-Graph-Theory" class="headerlink" title="Spectral Graph Theory"></a>Spectral Graph Theory</h1>]]></content>
+    <title>【李宏毅 机器学习】Unsupervised Learning: Dimension Reduction</title>
+    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Dimension-Reduction/</url>
+    <content><![CDATA[<p>无监督学习可以做两种事情</p>
+<ul>
+<li>Clustering &amp; Dimension Reduction (化繁为简)</li>
+<li>Generation (无中生有)</li>
+</ul>
+<h1 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h1><h2 id="聚类数量自行决定"><a href="#聚类数量自行决定" class="headerlink" title="聚类数量自行决定"></a>聚类数量自行决定</h2><ol>
+<li>K-means</li>
+</ol>
+<h2 id="Hierarchical-Agglomerative-Clustering-HAC"><a href="#Hierarchical-Agglomerative-Clustering-HAC" class="headerlink" title="Hierarchical Agglomerative Clustering (HAC)"></a>Hierarchical Agglomerative Clustering (HAC)</h2><p>Step 1: build a tree<br>Step 2: pick a threshold</p>
+<h1 id="Distributed-Repersentation"><a href="#Distributed-Repersentation" class="headerlink" title="Distributed Repersentation"></a>Distributed Repersentation</h1><ul>
+<li>Clustering: must be one</li>
+<li>Distributed representation: 用一个向量表示, 也是Dimension Reduction</li>
+</ul>
+<ol>
+<li>Feature Selection: 删除无用dimension</li>
+<li>Principle component analysis (PCA)</li>
+</ol>
+<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><p>Linear的方法，无法解决非linear情况。</p>
+<p>z = Wx</p>
+<p>W为单位正交矩阵，使得z的variance最大。 </p>
+<h1 id="Matrix-Factorization"><a href="#Matrix-Factorization" class="headerlink" title="Matrix Factorization"></a>Matrix Factorization</h1><p>SVD分解？</p>
+<p>分别加bias</p>
+<p>用于推荐系统，Latent semantic analysis</p>
+]]></content>
       <tags>
         <tag>machine learning</tag>
         <tag>李宏毅 机器学习</tag>
@@ -591,41 +619,6 @@
       </categories>
   </entry>
   <entry>
-    <title>字节跳动 实习经历</title>
-    <url>/category/%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8-%E5%AE%9E%E4%B9%A0%E7%BB%8F%E5%8E%86/</url>
-    <content><![CDATA[<p>在2019年6月末，我作为一名后端开发实习生，入职了字节跳动 今日头条财经部门，直到同年9月末离职。</p>
-<p>我认为这是一段很有意义的实习，所以在这里记录一下实习过程，以及实习感悟。</p>
-<p>以下内容和感悟，只是我在实习后的一些所思所想，有很多局限性，因此可能会有很多比较幼稚的想法。</p>
-<h1 id="项目经历"><a href="#项目经历" class="headerlink" title="项目经历"></a>项目经历</h1><p>在实习的这三个月，我主要完成的是一个信息展示的项目，似乎不能透露具体细节，所以我在这里只说一下研发流程。这个研发流程可能不同的公司不同的组会不太一样，但是总体的思路应该是相同的。</p>
-<p>首先在接到一个项目需求后，会根据项目的需求，根据UI和产品经理提供的图和文档，编写接口文档（提供给前端）。再根据接口文档写这一期项目的设计文档。设计文档主要包含：接口的逻辑、数据库和缓存的设计、task的逻辑和作用等。在写接口文档和设计文档的过程中，会逐渐了解项目，并且会分配具体每个人要完成的接口和task，每个人写自己需要完成那部分的设计。</p>
-<p>在写设计文档的过程中，可能就开始开发了，首先搭好项目开发的脚手架，然后根据项目的不同，修改一些配置，添加项目所用表的sql。然后就可以开始进行业务逻辑的开发了。</p>
-<p>在开始开发之前，还需要根据接口文档写提供给前端的mock。在我实习过程中，前端的mock是后端来提供的，但是这项工作似乎根据项目组和公司的不同，很多是前端自己来写的。</p>
-<p>在实际开发过程中，肯定会发现一些在设计过程中没有发现的问题，然后再调整实现的逻辑，并不断对齐设计文档。</p>
-<p>开发和写ut一般是同时进行的，但是一般在开发结束后，ut覆盖率是无法达标的，而且可能会存在很多问题，需要后面做单独的处理。</p>
-<p>开发基本完成后，就会开始联调。联调的环境通常跟开发和ut的环境是不同的。总的来说，一般需要3套环境，开发环境，联调环境，线上环境。</p>
-<p>联调完成后，会有QA（测试）人员进行测试，并反馈BUG。<br>根据我的观察，开发、联调、测试虽然有一个比较明确的时间点，但是在实际操作过程中，其实这个时间是很模糊的，可能前后端开发还差很多呢，就开始部署联调环境开始联调了。<br>然后，两边的开发和联调尚未结束时，就开始进行测试了。所以有时候，说是反馈BUG，可能只是这部分还没写完。这种情况不知道是互联网公司的常态，还是只有进度比较紧的情况下才会发生。</p>
-<p>测试完成而且PM（产品经理）验收后，就可以上线了。但是其实这时候这个项目并不是完全稳定了，因为，项目会有很多开发人员不清楚的具体问题（比如，数据的范围，数据的量等等）。<br>这些问题需要产品上线后，持续观察才可以确定。所以，一个项目是需要设置很多报警和监控的，而且开发人员在项目刚上线的时候，也需要持续关注项目。<br>上线后，发现问题与预期不相符的时候，就需要进行优化了。</p>
-<h1 id="技术感悟"><a href="#技术感悟" class="headerlink" title="技术感悟"></a>技术感悟</h1><p>在实习过程中，我学习到的东西主要是项目设计的相关知识，以及大厂的技术栈和真正的项目开发流程等知识。<br>至于单纯的技术方面，其实并没有学习到很多内容，或者说本身完成业务逻辑的开发，其实并不需要很强的技术能力。</p>
-<p>我认为在业务逻辑的后端开发中，比较重要的几点是：</p>
-<ol>
-<li>对于中间件的了解，包括Mysql，redis，Kafka等。可能不需要完全理解这些中间件的内部数据结构，构建索引的方式等，但是至少要知道大部分使用方式等。</li>
-<li>编程语言和编程基本功。如果对编程语言了解的不好，或者编程基本功比较差，虽然可能仍能实现业务的逻辑，但是实现方式会比较丑陋。<br>而且比较重要一点是，可能阅读其他人的代码或者一些第三方库会有困难。</li>
-<li>项目设计的能力。这个可能比较考验经验和技术栈的深度。应当使用什么样的策略，怎样设计task，怎样设计接口的实现逻辑等。</li>
-</ol>
-<p>总而言之，在我实习过程中，我认为进行业务逻辑的开发还是比较容易的，这可能跟mentor给我分配的任务相对容易有关系，但是我认为在我研究生毕业后，或者工作一两年后，进行通常的业务逻辑的开发必然不再是一件有挑战的事情。</p>
-<p>不过，如果再加上高访问量，高并发等场景，可能还是比较有调整的一件事。</p>
-<p>总而言之，我比较在乎的一件事是，在未来工作多年后，作为一名后端开发人员，如何最大的实现自己的价值，如何能把自己的技术能力最大的体现出来呢。如果在工作10年后，自己在做的事情和刚工作一两年时做的事情差不多，是我所不能接受的。但是在后端开发这里，似乎也是不可避免的。</p>
-<p>所以是否后端开发人员，尤其是进行业务逻辑开发的人员，在技术成长到一定程度后，后续的成长就需要靠对业务的理解和领导能力等技术无关的方面了？这个问题我现在还无法解答。</p>
-<h1 id="氛围感受"><a href="#氛围感受" class="headerlink" title="氛围感受"></a>氛围感受</h1><p>总体来说，字节跳动的氛围我还是很喜欢的，有“创业精神”，也就是同事之间比较坦诚清晰，而且各种事情办理起来还是很方便的，没有在学校办事的官僚气息。<br>而且公司会定期有，技术分享会，也会鼓励员工写博客、做分享、做专利等。感觉字节跳动还是一个非常重视技术的公司。</p>
-<p>头条实行的加班政策是大小周，正式员工加班的天有加班费，我们实习生也会多拿一天钱，对于没啥事的学生而言还是不错的。<br>另外就是，工作时间，我一般在上午10点半之前到公司，然后，晚上回去的时间不定，比较早的时候，就是8点走，晚的时候会到10点，通常是9点之前，大概8点50左右。<br>我的感受是，不算周五、加班的周日还有活动日等特殊回去早的时间，平均下班大概是在9点。<br>下班时间主要是看近期的工作量和会议的安排，如果晚上有code review等会，自然会回去的晚，如果近期没啥开发任务，8点就可以溜了。</p>
-<p>还有我比较重视的一点，就是技术的成长。作为一名从没有互联网工作经历的实习生，在实习过程中，我自然学到了很多。<br>但是我也在思考，如果是一名正式员工，我需要如何增长我的技术力呢。<br>毕竟，项目的开发通常使用的技术栈，都是你熟悉的，你进行的设计，也都是你所了解的。<br>所以在我看来，在日常工作中，是很少有技术能力的增长的，但是可以增长开发的经验，能够处理更多的问题。</p>
-<p>因此，我认为，在工作后，如果想要持续的提升技术能力，就需要自己不断的主动学习，多看项目，或者参与一些开源项目。<br>而做这些的时间，除了从休息时间中挤出来，还需要在上班过程中进行。<br>毕竟在很多开发任务不紧的时候，在公司其实是没事可做的，待在公司只是为了做到oncall，所以这些时间就可以用来主动学习提升技术。<br>这还是很需要毅力和自制力的。</p>
-]]></content>
-      <categories>
-        <category>杂记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>基于Docker搭建深度学习环境</title>
     <url>/category/%E5%9F%BA%E4%BA%8EDocker%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><p>软件环境：</p>
@@ -684,6 +677,41 @@
 ]]></content>
   </entry>
   <entry>
+    <title>字节跳动 实习经历</title>
+    <url>/category/%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8-%E5%AE%9E%E4%B9%A0%E7%BB%8F%E5%8E%86/</url>
+    <content><![CDATA[<p>在2019年6月末，我作为一名后端开发实习生，入职了字节跳动 今日头条财经部门，直到同年9月末离职。</p>
+<p>我认为这是一段很有意义的实习，所以在这里记录一下实习过程，以及实习感悟。</p>
+<p>以下内容和感悟，只是我在实习后的一些所思所想，有很多局限性，因此可能会有很多比较幼稚的想法。</p>
+<h1 id="项目经历"><a href="#项目经历" class="headerlink" title="项目经历"></a>项目经历</h1><p>在实习的这三个月，我主要完成的是一个信息展示的项目，似乎不能透露具体细节，所以我在这里只说一下研发流程。这个研发流程可能不同的公司不同的组会不太一样，但是总体的思路应该是相同的。</p>
+<p>首先在接到一个项目需求后，会根据项目的需求，根据UI和产品经理提供的图和文档，编写接口文档（提供给前端）。再根据接口文档写这一期项目的设计文档。设计文档主要包含：接口的逻辑、数据库和缓存的设计、task的逻辑和作用等。在写接口文档和设计文档的过程中，会逐渐了解项目，并且会分配具体每个人要完成的接口和task，每个人写自己需要完成那部分的设计。</p>
+<p>在写设计文档的过程中，可能就开始开发了，首先搭好项目开发的脚手架，然后根据项目的不同，修改一些配置，添加项目所用表的sql。然后就可以开始进行业务逻辑的开发了。</p>
+<p>在开始开发之前，还需要根据接口文档写提供给前端的mock。在我实习过程中，前端的mock是后端来提供的，但是这项工作似乎根据项目组和公司的不同，很多是前端自己来写的。</p>
+<p>在实际开发过程中，肯定会发现一些在设计过程中没有发现的问题，然后再调整实现的逻辑，并不断对齐设计文档。</p>
+<p>开发和写ut一般是同时进行的，但是一般在开发结束后，ut覆盖率是无法达标的，而且可能会存在很多问题，需要后面做单独的处理。</p>
+<p>开发基本完成后，就会开始联调。联调的环境通常跟开发和ut的环境是不同的。总的来说，一般需要3套环境，开发环境，联调环境，线上环境。</p>
+<p>联调完成后，会有QA（测试）人员进行测试，并反馈BUG。<br>根据我的观察，开发、联调、测试虽然有一个比较明确的时间点，但是在实际操作过程中，其实这个时间是很模糊的，可能前后端开发还差很多呢，就开始部署联调环境开始联调了。<br>然后，两边的开发和联调尚未结束时，就开始进行测试了。所以有时候，说是反馈BUG，可能只是这部分还没写完。这种情况不知道是互联网公司的常态，还是只有进度比较紧的情况下才会发生。</p>
+<p>测试完成而且PM（产品经理）验收后，就可以上线了。但是其实这时候这个项目并不是完全稳定了，因为，项目会有很多开发人员不清楚的具体问题（比如，数据的范围，数据的量等等）。<br>这些问题需要产品上线后，持续观察才可以确定。所以，一个项目是需要设置很多报警和监控的，而且开发人员在项目刚上线的时候，也需要持续关注项目。<br>上线后，发现问题与预期不相符的时候，就需要进行优化了。</p>
+<h1 id="技术感悟"><a href="#技术感悟" class="headerlink" title="技术感悟"></a>技术感悟</h1><p>在实习过程中，我学习到的东西主要是项目设计的相关知识，以及大厂的技术栈和真正的项目开发流程等知识。<br>至于单纯的技术方面，其实并没有学习到很多内容，或者说本身完成业务逻辑的开发，其实并不需要很强的技术能力。</p>
+<p>我认为在业务逻辑的后端开发中，比较重要的几点是：</p>
+<ol>
+<li>对于中间件的了解，包括Mysql，redis，Kafka等。可能不需要完全理解这些中间件的内部数据结构，构建索引的方式等，但是至少要知道大部分使用方式等。</li>
+<li>编程语言和编程基本功。如果对编程语言了解的不好，或者编程基本功比较差，虽然可能仍能实现业务的逻辑，但是实现方式会比较丑陋。<br>而且比较重要一点是，可能阅读其他人的代码或者一些第三方库会有困难。</li>
+<li>项目设计的能力。这个可能比较考验经验和技术栈的深度。应当使用什么样的策略，怎样设计task，怎样设计接口的实现逻辑等。</li>
+</ol>
+<p>总而言之，在我实习过程中，我认为进行业务逻辑的开发还是比较容易的，这可能跟mentor给我分配的任务相对容易有关系，但是我认为在我研究生毕业后，或者工作一两年后，进行通常的业务逻辑的开发必然不再是一件有挑战的事情。</p>
+<p>不过，如果再加上高访问量，高并发等场景，可能还是比较有调整的一件事。</p>
+<p>总而言之，我比较在乎的一件事是，在未来工作多年后，作为一名后端开发人员，如何最大的实现自己的价值，如何能把自己的技术能力最大的体现出来呢。如果在工作10年后，自己在做的事情和刚工作一两年时做的事情差不多，是我所不能接受的。但是在后端开发这里，似乎也是不可避免的。</p>
+<p>所以是否后端开发人员，尤其是进行业务逻辑开发的人员，在技术成长到一定程度后，后续的成长就需要靠对业务的理解和领导能力等技术无关的方面了？这个问题我现在还无法解答。</p>
+<h1 id="氛围感受"><a href="#氛围感受" class="headerlink" title="氛围感受"></a>氛围感受</h1><p>总体来说，字节跳动的氛围我还是很喜欢的，有“创业精神”，也就是同事之间比较坦诚清晰，而且各种事情办理起来还是很方便的，没有在学校办事的官僚气息。<br>而且公司会定期有，技术分享会，也会鼓励员工写博客、做分享、做专利等。感觉字节跳动还是一个非常重视技术的公司。</p>
+<p>头条实行的加班政策是大小周，正式员工加班的天有加班费，我们实习生也会多拿一天钱，对于没啥事的学生而言还是不错的。<br>另外就是，工作时间，我一般在上午10点半之前到公司，然后，晚上回去的时间不定，比较早的时候，就是8点走，晚的时候会到10点，通常是9点之前，大概8点50左右。<br>我的感受是，不算周五、加班的周日还有活动日等特殊回去早的时间，平均下班大概是在9点。<br>下班时间主要是看近期的工作量和会议的安排，如果晚上有code review等会，自然会回去的晚，如果近期没啥开发任务，8点就可以溜了。</p>
+<p>还有我比较重视的一点，就是技术的成长。作为一名从没有互联网工作经历的实习生，在实习过程中，我自然学到了很多。<br>但是我也在思考，如果是一名正式员工，我需要如何增长我的技术力呢。<br>毕竟，项目的开发通常使用的技术栈，都是你熟悉的，你进行的设计，也都是你所了解的。<br>所以在我看来，在日常工作中，是很少有技术能力的增长的，但是可以增长开发的经验，能够处理更多的问题。</p>
+<p>因此，我认为，在工作后，如果想要持续的提升技术能力，就需要自己不断的主动学习，多看项目，或者参与一些开源项目。<br>而做这些的时间，除了从休息时间中挤出来，还需要在上班过程中进行。<br>毕竟在很多开发任务不紧的时候，在公司其实是没事可做的，待在公司只是为了做到oncall，所以这些时间就可以用来主动学习提升技术。<br>这还是很需要毅力和自制力的。</p>
+]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>知识图谱入门</title>
     <url>/category/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[<p>建议看一下<a href="http://kns.cnki.net//KXReader/Detail?TIMESTAMP=637079442179476250&DBCODE=CJFQ&TABLEName=CJFDLAST2016&FileName=JFYZ201603009&RESULT=1&SIGN=Au6SSMT0m1NtHUck%2futGr3TITls%3d" target="_blank" rel="noopener">知识图谱构建技术综述</a>这篇综述。我这篇入门大部分内容提取自这篇综述。</p>
@@ -726,37 +754,5 @@
       <categories>
         <category>知识图谱</category>
       </categories>
-  </entry>
-  <entry>
-    <title>【李宏毅 机器学习】Unsupervised Learning: Dimension Reduction</title>
-    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Dimension-Reduction/</url>
-    <content><![CDATA[<p>无监督学习可以做两种事情</p>
-<ul>
-<li>Clustering &amp; Dimension Reduction (化繁为简)</li>
-<li>Generation (无中生有)</li>
-</ul>
-<h1 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h1><h2 id="聚类数量自行决定"><a href="#聚类数量自行决定" class="headerlink" title="聚类数量自行决定"></a>聚类数量自行决定</h2><ol>
-<li>K-means</li>
-</ol>
-<h2 id="Hierarchical-Agglomerative-Clustering-HAC"><a href="#Hierarchical-Agglomerative-Clustering-HAC" class="headerlink" title="Hierarchical Agglomerative Clustering (HAC)"></a>Hierarchical Agglomerative Clustering (HAC)</h2><p>Step 1: build a tree<br>Step 2: pick a threshold</p>
-<h1 id="Distributed-Repersentation"><a href="#Distributed-Repersentation" class="headerlink" title="Distributed Repersentation"></a>Distributed Repersentation</h1><ul>
-<li>Clustering: must be one</li>
-<li>Distributed representation: 用一个向量表示, 也是Dimension Reduction</li>
-</ul>
-<ol>
-<li>Feature Selection: 删除无用dimension</li>
-<li>Principle component analysis (PCA)</li>
-</ol>
-<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><p>Linear的方法，无法解决非linear情况。</p>
-<p>z = Wx</p>
-<p>W为单位正交矩阵，使得z的variance最大。 </p>
-<h1 id="Matrix-Factorization"><a href="#Matrix-Factorization" class="headerlink" title="Matrix Factorization"></a>Matrix Factorization</h1><p>SVD分解？</p>
-<p>分别加bias</p>
-<p>用于推荐系统，Latent semantic analysis</p>
-]]></content>
-      <tags>
-        <tag>machine learning</tag>
-        <tag>李宏毅 机器学习</tag>
-      </tags>
   </entry>
 </search>
