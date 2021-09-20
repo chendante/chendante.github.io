@@ -175,6 +175,39 @@
       </tags>
   </entry>
   <entry>
+    <title>【golang】类型转换</title>
+    <url>/category/%E3%80%90golang%E3%80%91%E7%B1%BB%E5%9E%8B%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="一、类型转换"><a href="#一、类型转换" class="headerlink" title="一、类型转换"></a>一、类型转换</h1><ol>
+<li>语法：&lt;结果类型&gt; := &lt;目标类型&gt;(&lt;表达式&gt;)</li>
+<li>golang自己的基本类型之间的强制转换，我们在这里不讨论。</li>
+<li>类型的强制转换，可以看成编译原理中的类型等价中的名字等价。例如，下面这三种类型是可以相互转换的：</li>
+</ol>
+<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> test1 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test2 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test3 test1</span><br></pre></td></tr></table></figure>
+
+<p>但是下面这两种类型就不能相互转换了。</p>
+<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> test1 <span class="keyword">struct</span> &#123;</span><br><span class="line">    test1J <span class="keyword">int</span></span><br><span class="line">    test1I <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test2 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>类型强制转换是否可以进行，ide是会有提示的。因此类型转换在编译期完成。</li>
+<li>golang不允许隐式类型转换，但是数字转换成表达式中所需类型是可以的。</li>
+<li>还有一些interface间的强制转换，用到的不多，根据IDE提示就可以判断了。</li>
+</ol>
+<h1 id="二、类型断言"><a href="#二、类型断言" class="headerlink" title="二、类型断言"></a>二、类型断言</h1><ol>
+<li>安全类型断言： &lt;目标类型的值&gt;,&lt;布尔参数&gt; := &lt;表达式&gt;.( 目标类型 )</li>
+<li>非安全类型断言：&lt;目标类型的值&gt; := &lt;表达式&gt;.( 目标类型 )；如果转换错误，则会panic</li>
+<li>类型断言是在运行过程中进行的，因此IDE无法给予提示。</li>
+<li>类型断言只能用于 接口转类型</li>
+</ol>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>后端</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【golang】理解interface</title>
     <url>/category/%E3%80%90golang%E3%80%91%E7%90%86%E8%A7%A3interface/</url>
     <content><![CDATA[<h1 id="一、interface基本概念"><a href="#一、interface基本概念" class="headerlink" title="一、interface基本概念"></a>一、interface基本概念</h1><blockquote>
@@ -215,37 +248,36 @@
       </tags>
   </entry>
   <entry>
-    <title>【golang】类型转换</title>
-    <url>/category/%E3%80%90golang%E3%80%91%E7%B1%BB%E5%9E%8B%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="一、类型转换"><a href="#一、类型转换" class="headerlink" title="一、类型转换"></a>一、类型转换</h1><ol>
-<li>语法：&lt;结果类型&gt; := &lt;目标类型&gt;(&lt;表达式&gt;)</li>
-<li>golang自己的基本类型之间的强制转换，我们在这里不讨论。</li>
-<li>类型的强制转换，可以看成编译原理中的类型等价中的名字等价。例如，下面这三种类型是可以相互转换的：</li>
-</ol>
-<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> test1 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test2 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test3 test1</span><br></pre></td></tr></table></figure>
-
-<p>但是下面这两种类型就不能相互转换了。</p>
-<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> test1 <span class="keyword">struct</span> &#123;</span><br><span class="line">    test1J <span class="keyword">int</span></span><br><span class="line">    test1I <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test2 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>类型强制转换是否可以进行，ide是会有提示的。因此类型转换在编译期完成。</li>
-<li>golang不允许隐式类型转换，但是数字转换成表达式中所需类型是可以的。</li>
-<li>还有一些interface间的强制转换，用到的不多，根据IDE提示就可以判断了。</li>
-</ol>
-<h1 id="二、类型断言"><a href="#二、类型断言" class="headerlink" title="二、类型断言"></a>二、类型断言</h1><ol>
-<li>安全类型断言： &lt;目标类型的值&gt;,&lt;布尔参数&gt; := &lt;表达式&gt;.( 目标类型 )</li>
-<li>非安全类型断言：&lt;目标类型的值&gt; := &lt;表达式&gt;.( 目标类型 )；如果转换错误，则会panic</li>
-<li>类型断言是在运行过程中进行的，因此IDE无法给予提示。</li>
-<li>类型断言只能用于 接口转类型</li>
-</ol>
+    <title>【学习资料】各技术栈经典书籍整理</title>
+    <url>/category/%E3%80%90%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99%E3%80%91%E5%90%84%E6%8A%80%E6%9C%AF%E6%A0%88%E7%BB%8F%E5%85%B8%E4%B9%A6%E7%B1%8D%E6%95%B4%E7%90%86/</url>
+    <content><![CDATA[<h1 id="通用"><a href="#通用" class="headerlink" title="通用"></a>通用</h1><ul>
+<li>《深入理解计算机系统》</li>
+</ul>
+<h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><ul>
+<li><a href="http://www.uml.org.cn/sjms/201211023.asp" target="_blank" rel="noopener">设计模式六大原则</a></li>
+<li><a href="https://refactoring.guru/" target="_blank" rel="noopener">https://refactoring.guru/</a></li>
+</ul>
+<h1 id="语言类"><a href="#语言类" class="headerlink" title="语言类"></a>语言类</h1><h2 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h2><ul>
+<li>Imperfect C++</li>
+<li>Effective C++</li>
+<li>More Effective C++</li>
+<li>Effective Modern C++</li>
+</ul>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><ul>
+<li><p>Java 编程思想: 厚且全</p>
+</li>
+<li><p>Java 并发编程: 相对薄，对并发编程可以有比较全面的理解</p>
+</li>
+<li><p>Effective Java: 进阶书</p>
+</li>
+<li><p>深入理解 Java 虚拟机: JVM 原理，粗略看，对GC有深刻认识即可</p>
+</li>
+<li><p>Maven 实战: 粗略知道即可</p>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1></li>
+<li><p>《Unix网络编程》第一卷 <a href="https://github.com/arkingc/note/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UNIX%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%8D%B71.md" target="_blank" rel="noopener">note</a></p>
+</li>
+</ul>
 ]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>golang</tag>
-        <tag>后端</tag>
-      </tags>
   </entry>
   <entry>
     <title>【李宏毅 机器学习】Bert</title>
@@ -284,6 +316,39 @@
       <tags>
         <tag>machine learning</tag>
         <tag>李宏毅 机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Golang】Channel&amp;Context 应用实例</title>
+    <url>/category/%E3%80%90Golang%E3%80%91Channel-Context-%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B/</url>
+    <content><![CDATA[<p>本文将用一个实际应用中的例子来理解如何使用 Golang 的Channel和Context。</p>
+<h1 id="Golang-Channel"><a href="#Golang-Channel" class="headerlink" title="Golang Channel"></a>Golang Channel</h1><p>需求：</p>
+<blockquote>
+<ul>
+<li>根据ID列表，从数据库中捞取ID对应数据</li>
+<li>每条SQL语句最多可取一定量(BatchLimit)的id数据</li>
+<li>最多同时(ParallelLimit)条SQL打到数据库</li>
+</ul>
+</blockquote>
+<p>先放代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParallelGet</span><span class="params">(ids []<span class="keyword">int64</span>, BatchLimit <span class="keyword">int</span>, ParallelLimit <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span>&#123;</span><br><span class="line">	idsChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> begin := <span class="number">0</span>; begin &lt; <span class="built_in">len</span>(ids); begin += BatchLimit &#123;</span><br><span class="line">			idsChannel &lt;- ids[begin:mathutil.Min(begin+BatchLimit, <span class="built_in">len</span>(ids))]</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">close</span>(idsChannel)</span><br><span class="line">	&#125;()</span><br><span class="line">	resChannel, errChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit), <span class="built_in">make</span>(<span class="keyword">chan</span> error, ParallelLimit)</span><br><span class="line">	stopCh := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ParallelLimit; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> util.RecoverFromPanic()</span><br><span class="line">			<span class="keyword">for</span> pIds := <span class="keyword">range</span> idsChannel &#123;</span><br><span class="line">				data, err := multiGetFromDataSet(pIds)</span><br><span class="line">				<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">					errChannel &lt;- err</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">select</span> &#123;</span><br><span class="line">				<span class="keyword">case</span> resChannel &lt;- data:</span><br><span class="line">				<span class="keyword">case</span> &lt;-stopCh:</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">	&#125;</span><br><span class="line">	totalBatchNum, count := (<span class="built_in">len</span>(ids) - <span class="number">1</span>) / BatchLimit + <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">	res := <span class="built_in">make</span>([]<span class="keyword">int64</span>, <span class="number">0</span>)</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> err := &lt;-errChannel:</span><br><span class="line">			<span class="built_in">close</span>(stopCh)</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">		<span class="keyword">case</span> pRes := &lt;-resChannel:</span><br><span class="line">			res = <span class="built_in">append</span>(res, pRes...)</span><br><span class="line">			count ++</span><br><span class="line">			<span class="keyword">if</span> count == totalBatchNum &#123;</span><br><span class="line">				<span class="built_in">close</span>(stopCh)</span><br><span class="line">				<span class="keyword">return</span> res, <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="用channel来通信！"><a href="#用channel来通信！" class="headerlink" title="用channel来通信！"></a>用channel来通信！</h2><p>「不要用共享内存来通信，而要用通信来共享内存」，这句Golang社区广受推崇的设计理念，对Golang而言更确切说法应为：「应当使用Channel来在Goroutine间同步信息，而不是多个Goroutine直接共享内存」。<br>这句话可以被看作是Golang社区的一句自夸——golang channel的设计使得其比共享内存更易用。<br>Channel的特性配合Select语法糖，令其在多协程消息传递方面变得十分易用。</p>
+<h2 id="如何关闭-channel？"><a href="#如何关闭-channel？" class="headerlink" title="如何关闭 channel？"></a>如何关闭 channel？</h2><p>对于channel的关闭，需要知道的可以总结为一个知识点：<br><strong>「channel的关闭是一种消息传递方式而非一项必须做的任务」</strong>，channel就算不关闭，当不再能被访问时，也会被GC回收。<br>以及一项实践原则：<br><strong>「只有唯一发送者可关闭channel」</strong>。</p>
+<p>对于这一点更为细致的讲解可参考：<a href="https://go101.org/article/channel-closing.html" target="_blank" rel="noopener">How to Gracefully Close Channels</a>,<a href="https://www.jianshu.com/p/d24dfbb33781" target="_blank" rel="noopener">(中译)</a>。</p>
+<p>在该指导原则下，对channel的关闭可以分为三种情况：一写；多写一读；多写多读。</p>
+<ul>
+<li>一写多读/一读: 这种情况很简单，在单独的写协程处，写完直接关闭channel即可。这种情况对应该例子中的idsChannel。读协程直接for+range即可获取到关闭消息。</li>
+<li>多写一读: 这种情况下不能关闭channel来通知写协程退出，因此需要多一个channel来发送退出消息。对应resChannel，通知channel为StopCh。<h1 id="Golang-Context"><a href="#Golang-Context" class="headerlink" title="Golang Context"></a>Golang Context</h1></li>
+</ul>
+<p>Golang Context的作用：用于通知协程退出的方法，可以传递一定的上下文信息。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>后端</tag>
       </tags>
   </entry>
   <entry>
@@ -353,38 +418,6 @@
 <ol start="6">
 <li>Sequence to Sequence auto-encoder</li>
 </ol>
-]]></content>
-      <tags>
-        <tag>machine learning</tag>
-        <tag>李宏毅 机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【李宏毅 机器学习】Unsupervised Learning: Dimension Reduction</title>
-    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Dimension-Reduction/</url>
-    <content><![CDATA[<p>无监督学习可以做两种事情</p>
-<ul>
-<li>Clustering &amp; Dimension Reduction (化繁为简)</li>
-<li>Generation (无中生有)</li>
-</ul>
-<h1 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h1><h2 id="聚类数量自行决定"><a href="#聚类数量自行决定" class="headerlink" title="聚类数量自行决定"></a>聚类数量自行决定</h2><ol>
-<li>K-means</li>
-</ol>
-<h2 id="Hierarchical-Agglomerative-Clustering-HAC"><a href="#Hierarchical-Agglomerative-Clustering-HAC" class="headerlink" title="Hierarchical Agglomerative Clustering (HAC)"></a>Hierarchical Agglomerative Clustering (HAC)</h2><p>Step 1: build a tree<br>Step 2: pick a threshold</p>
-<h1 id="Distributed-Repersentation"><a href="#Distributed-Repersentation" class="headerlink" title="Distributed Repersentation"></a>Distributed Repersentation</h1><ul>
-<li>Clustering: must be one</li>
-<li>Distributed representation: 用一个向量表示, 也是Dimension Reduction</li>
-</ul>
-<ol>
-<li>Feature Selection: 删除无用dimension</li>
-<li>Principle component analysis (PCA)</li>
-</ol>
-<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><p>Linear的方法，无法解决非linear情况。</p>
-<p>z = Wx</p>
-<p>W为单位正交矩阵，使得z的variance最大。 </p>
-<h1 id="Matrix-Factorization"><a href="#Matrix-Factorization" class="headerlink" title="Matrix Factorization"></a>Matrix Factorization</h1><p>SVD分解？</p>
-<p>分别加bias</p>
-<p>用于推荐系统，Latent semantic analysis</p>
 ]]></content>
       <tags>
         <tag>machine learning</tag>
@@ -508,6 +541,85 @@
       </tags>
   </entry>
   <entry>
+    <title>个人博客搭建</title>
+    <url>/category/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h1 id="个人博客搭建"><a href="#个人博客搭建" class="headerlink" title="个人博客搭建"></a>个人博客搭建</h1><p>本文将会介绍从购买完一个云服务器，到搭建完成个人博客的全部历程。</p>
+<h2 id="搭建node-js环境"><a href="#搭建node-js环境" class="headerlink" title="搭建node.js环境"></a>搭建node.js环境</h2><p>本部分参考<a href="https://cloud.tencent.com/developer/labs/lab/10040" target="_blank" rel="noopener">腾讯云 搭建node.js环境</a></p>
+<h3 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h3><p>下载最新稳定版node.js(自己去官网找Linux上的最新版node.js连接)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v6.10.3/node-v6.10.3-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
+
+<p>下载完成后，将其解压</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar xvJf node-v6.10.3-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
+
+<p>将解压的 Node.js 目录移动到 /usr/local 目录下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mv node-v6.10.3-linux-x64 /usr/local/node-v6</span><br></pre></td></tr></table></figure>
+
+<p>配置 node 软链接到 /bin 目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ln -s /usr/local/node-v6/bin/node /bin/node</span><br></pre></td></tr></table></figure>
+
+<p>用node -v命令来查看是否安装成功</p>
+<h3 id="配置npm"><a href="#配置npm" class="headerlink" title="配置npm"></a>配置npm</h3><p>npm 是 Node.js 的包管理和分发工具。它可以让 Node.js 开发者能够更加轻松的共享代码和共用代码片段</p>
+<p>下载 node 的压缩包中已经包含了 npm , 我们只需要将其软链接到 bin 目录下即可</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ln -s /usr/local/node-v6/bin/npm /bin/npm</span><br></pre></td></tr></table></figure>
+
+<p>配置环境变量</p>
+<p>将 /usr/local/node-v6/bin 目录添加到 $PATH 环境变量中可以方便地使用通过 npm 全局安装的第三方工具(如果你之前自己改过目录名，按照自己的目录名来)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &apos;export PATH=/usr/local/node-v6/bin:$PATH&apos; &gt;&gt; /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>生效环境变量</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>此处建议安装forever，未来会用得上：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install forever -g</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h2><p>略</p>
+<h2 id="hexo环境搭建"><a href="#hexo环境搭建" class="headerlink" title="hexo环境搭建"></a>hexo环境搭建</h2><p>本部分参考<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">hexo官方文档</a></p>
+<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>上述过程正确进行的话，只需以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>用 hexo -v命令查看是否成功，如果没有成功，但是npm -v成功，则可能上面配置环境变量步骤有误。</p>
+<h3 id="建站"><a href="#建站" class="headerlink" title="建站"></a>建站</h3><p>在你想建站的文件夹下执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ cd &lt;folder&gt;</span><br><span class="line">$ npm install</span><br><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>此时你在访问你服务器IP地址的4000端口就可以看到一个基础的博客页面了。</p>
+]]></content>
+      <categories>
+        <category>工具&amp;环境</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>【李宏毅 机器学习】Unsupervised Learning: Dimension Reduction</title>
+    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Dimension-Reduction/</url>
+    <content><![CDATA[<p>无监督学习可以做两种事情</p>
+<ul>
+<li>Clustering &amp; Dimension Reduction (化繁为简)</li>
+<li>Generation (无中生有)</li>
+</ul>
+<h1 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h1><h2 id="聚类数量自行决定"><a href="#聚类数量自行决定" class="headerlink" title="聚类数量自行决定"></a>聚类数量自行决定</h2><ol>
+<li>K-means</li>
+</ol>
+<h2 id="Hierarchical-Agglomerative-Clustering-HAC"><a href="#Hierarchical-Agglomerative-Clustering-HAC" class="headerlink" title="Hierarchical Agglomerative Clustering (HAC)"></a>Hierarchical Agglomerative Clustering (HAC)</h2><p>Step 1: build a tree<br>Step 2: pick a threshold</p>
+<h1 id="Distributed-Repersentation"><a href="#Distributed-Repersentation" class="headerlink" title="Distributed Repersentation"></a>Distributed Repersentation</h1><ul>
+<li>Clustering: must be one</li>
+<li>Distributed representation: 用一个向量表示, 也是Dimension Reduction</li>
+</ul>
+<ol>
+<li>Feature Selection: 删除无用dimension</li>
+<li>Principle component analysis (PCA)</li>
+</ol>
+<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><p>Linear的方法，无法解决非linear情况。</p>
+<p>z = Wx</p>
+<p>W为单位正交矩阵，使得z的variance最大。 </p>
+<h1 id="Matrix-Factorization"><a href="#Matrix-Factorization" class="headerlink" title="Matrix Factorization"></a>Matrix Factorization</h1><p>SVD分解？</p>
+<p>分别加bias</p>
+<p>用于推荐系统，Latent semantic analysis</p>
+]]></content>
+      <tags>
+        <tag>machine learning</tag>
+        <tag>李宏毅 机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>基于Docker搭建深度学习环境</title>
     <url>/category/%E5%9F%BA%E4%BA%8EDocker%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><p>软件环境：</p>
@@ -564,53 +676,6 @@
 <h2 id="保存容器为镜像"><a href="#保存容器为镜像" class="headerlink" title="保存容器为镜像"></a>保存容器为镜像</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ docker commit $CONTAINER torchflowjup:20200925</span><br></pre></td></tr></table></figure>
 
 ]]></content>
-  </entry>
-  <entry>
-    <title>个人博客搭建</title>
-    <url>/category/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[<h1 id="个人博客搭建"><a href="#个人博客搭建" class="headerlink" title="个人博客搭建"></a>个人博客搭建</h1><p>本文将会介绍从购买完一个云服务器，到搭建完成个人博客的全部历程。</p>
-<h2 id="搭建node-js环境"><a href="#搭建node-js环境" class="headerlink" title="搭建node.js环境"></a>搭建node.js环境</h2><p>本部分参考<a href="https://cloud.tencent.com/developer/labs/lab/10040" target="_blank" rel="noopener">腾讯云 搭建node.js环境</a></p>
-<h3 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h3><p>下载最新稳定版node.js(自己去官网找Linux上的最新版node.js连接)</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget https://nodejs.org/dist/v6.10.3/node-v6.10.3-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
-
-<p>下载完成后，将其解压</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar xvJf node-v6.10.3-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
-
-<p>将解压的 Node.js 目录移动到 /usr/local 目录下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mv node-v6.10.3-linux-x64 /usr/local/node-v6</span><br></pre></td></tr></table></figure>
-
-<p>配置 node 软链接到 /bin 目录</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ln -s /usr/local/node-v6/bin/node /bin/node</span><br></pre></td></tr></table></figure>
-
-<p>用node -v命令来查看是否安装成功</p>
-<h3 id="配置npm"><a href="#配置npm" class="headerlink" title="配置npm"></a>配置npm</h3><p>npm 是 Node.js 的包管理和分发工具。它可以让 Node.js 开发者能够更加轻松的共享代码和共用代码片段</p>
-<p>下载 node 的压缩包中已经包含了 npm , 我们只需要将其软链接到 bin 目录下即可</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ln -s /usr/local/node-v6/bin/npm /bin/npm</span><br></pre></td></tr></table></figure>
-
-<p>配置环境变量</p>
-<p>将 /usr/local/node-v6/bin 目录添加到 $PATH 环境变量中可以方便地使用通过 npm 全局安装的第三方工具(如果你之前自己改过目录名，按照自己的目录名来)</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &apos;export PATH=/usr/local/node-v6/bin:$PATH&apos; &gt;&gt; /etc/profile</span><br></pre></td></tr></table></figure>
-
-<p>生效环境变量</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
-
-<p>此处建议安装forever，未来会用得上：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install forever -g</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h2><p>略</p>
-<h2 id="hexo环境搭建"><a href="#hexo环境搭建" class="headerlink" title="hexo环境搭建"></a>hexo环境搭建</h2><p>本部分参考<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">hexo官方文档</a></p>
-<h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>上述过程正确进行的话，只需以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<p>用 hexo -v命令查看是否成功，如果没有成功，但是npm -v成功，则可能上面配置环境变量步骤有误。</p>
-<h3 id="建站"><a href="#建站" class="headerlink" title="建站"></a>建站</h3><p>在你想建站的文件夹下执行以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ cd &lt;folder&gt;</span><br><span class="line">$ npm install</span><br><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>此时你在访问你服务器IP地址的4000端口就可以看到一个基础的博客页面了。</p>
-]]></content>
-      <categories>
-        <category>工具&amp;环境</category>
-      </categories>
   </entry>
   <entry>
     <title>字节跳动 实习经历</title>
