@@ -23,13 +23,6 @@
   </url>
   
   <url>
-    <loc>http://chendante.github.io/about/index.html</loc>
-    
-    <lastmod>2021-07-25</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://chendante.github.io/categories/index.html</loc>
     
     <lastmod>2021-07-25</lastmod>
@@ -44,7 +37,21 @@
   </url>
   
   <url>
+    <loc>http://chendante.github.io/about/index.html</loc>
+    
+    <lastmod>2021-07-25</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://chendante.github.io/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Auto-encoder/</loc>
+    
+    <lastmod>2021-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://chendante.github.io/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Dimension-Reduction/</loc>
     
     <lastmod>2021-07-25</lastmod>
     
@@ -65,13 +72,6 @@
   </url>
   
   <url>
-    <loc>http://chendante.github.io/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Dimension-Reduction/</loc>
-    
-    <lastmod>2021-07-25</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://chendante.github.io/category/%E5%9F%BA%E4%BA%8EDocker%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</loc>
     
     <lastmod>2021-07-25</lastmod>
@@ -86,13 +86,6 @@
   </url>
   
   <url>
-    <loc>http://chendante.github.io/category/%E3%80%90golang%E3%80%91%E7%B1%BB%E5%9E%8B%E5%85%A5%E9%97%A8/</loc>
-    
-    <lastmod>2021-07-25</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://chendante.github.io/category/%E3%80%90golang%E3%80%91%E7%90%86%E8%A7%A3interface/</loc>
     
     <lastmod>2021-07-25</lastmod>
@@ -100,7 +93,7 @@
   </url>
   
   <url>
-    <loc>http://chendante.github.io/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Bert/</loc>
+    <loc>http://chendante.github.io/category/%E3%80%90golang%E3%80%91%E7%B1%BB%E5%9E%8B%E5%85%A5%E9%97%A8/</loc>
     
     <lastmod>2021-07-25</lastmod>
     
@@ -108,6 +101,13 @@
   
   <url>
     <loc>http://chendante.github.io/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91GNN/</loc>
+    
+    <lastmod>2021-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://chendante.github.io/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Bert/</loc>
     
     <lastmod>2021-07-25</lastmod>
     
@@ -151,20 +151,6 @@
 
   
   <url>
-    <loc>http://chendante.github.io/tags/machine-learning/</loc>
-    <lastmod>2021-09-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://chendante.github.io/tags/%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2021-09-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://chendante.github.io/tags/golang/</loc>
     <lastmod>2021-09-20</lastmod>
     <changefreq>daily</changefreq>
@@ -173,6 +159,20 @@
   
   <url>
     <loc>http://chendante.github.io/tags/%E5%90%8E%E7%AB%AF/</loc>
+    <lastmod>2021-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://chendante.github.io/tags/machine-learning/</loc>
+    <lastmod>2021-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://chendante.github.io/tags/%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2021-09-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -188,13 +188,6 @@
 
   
   <url>
-    <loc>http://chendante.github.io/categories/%E6%9D%82%E8%AE%B0/</loc>
-    <lastmod>2021-09-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://chendante.github.io/categories/%E5%90%8E%E7%AB%AF/</loc>
     <lastmod>2021-09-20</lastmod>
     <changefreq>daily</changefreq>
@@ -203,6 +196,13 @@
   
   <url>
     <loc>http://chendante.github.io/categories/%E5%B7%A5%E5%85%B7-%E7%8E%AF%E5%A2%83/</loc>
+    <lastmod>2021-09-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://chendante.github.io/categories/%E6%9D%82%E8%AE%B0/</loc>
     <lastmod>2021-09-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

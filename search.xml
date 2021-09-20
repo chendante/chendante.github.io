@@ -100,6 +100,39 @@
       </tags>
   </entry>
   <entry>
+    <title>【Golang】Channel&amp;Context 应用实例</title>
+    <url>/category/%E3%80%90Golang%E3%80%91Channel-Context-%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B/</url>
+    <content><![CDATA[<p>本文将用一个实际应用中的例子来理解如何使用 Golang 的Channel和Context。</p>
+<h1 id="Golang-Channel"><a href="#Golang-Channel" class="headerlink" title="Golang Channel"></a>Golang Channel</h1><p>需求：</p>
+<blockquote>
+<ul>
+<li>根据ID列表，从数据库中捞取ID对应数据</li>
+<li>每条SQL语句最多可取一定量(BatchLimit)的id数据</li>
+<li>最多同时(ParallelLimit)条SQL打到数据库</li>
+</ul>
+</blockquote>
+<p>先放代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParallelGet</span><span class="params">(ids []<span class="keyword">int64</span>, BatchLimit <span class="keyword">int</span>, ParallelLimit <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span>&#123;</span><br><span class="line">	idsChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> begin := <span class="number">0</span>; begin &lt; <span class="built_in">len</span>(ids); begin += BatchLimit &#123;</span><br><span class="line">			idsChannel &lt;- ids[begin:mathutil.Min(begin+BatchLimit, <span class="built_in">len</span>(ids))]</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">close</span>(idsChannel)</span><br><span class="line">	&#125;()</span><br><span class="line">	resChannel, errChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit), <span class="built_in">make</span>(<span class="keyword">chan</span> error, ParallelLimit)</span><br><span class="line">	stopCh := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ParallelLimit; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> util.RecoverFromPanic()</span><br><span class="line">			<span class="keyword">for</span> pIds := <span class="keyword">range</span> idsChannel &#123;</span><br><span class="line">				data, err := multiGetFromDataSet(pIds)</span><br><span class="line">				<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">					errChannel &lt;- err</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">select</span> &#123;</span><br><span class="line">				<span class="keyword">case</span> resChannel &lt;- data:</span><br><span class="line">				<span class="keyword">case</span> &lt;-stopCh:</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">	&#125;</span><br><span class="line">	totalBatchNum, count := (<span class="built_in">len</span>(ids) - <span class="number">1</span>) / BatchLimit + <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">	res := <span class="built_in">make</span>([]<span class="keyword">int64</span>, <span class="number">0</span>)</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> err := &lt;-errChannel:</span><br><span class="line">			<span class="built_in">close</span>(stopCh)</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">		<span class="keyword">case</span> pRes := &lt;-resChannel:</span><br><span class="line">			res = <span class="built_in">append</span>(res, pRes...)</span><br><span class="line">			count ++</span><br><span class="line">			<span class="keyword">if</span> count == totalBatchNum &#123;</span><br><span class="line">				<span class="built_in">close</span>(stopCh)</span><br><span class="line">				<span class="keyword">return</span> res, <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="用channel来通信！"><a href="#用channel来通信！" class="headerlink" title="用channel来通信！"></a>用channel来通信！</h2><p>「不要用共享内存来通信，而要用通信来共享内存」，这句Golang社区广受推崇的设计理念，对Golang而言更确切说法应为：「应当使用Channel来在Goroutine间同步信息，而不是多个Goroutine直接共享内存」。<br>这句话可以被看作是Golang社区的一句自夸——golang channel的设计使得其比共享内存更易用。<br>Channel的特性配合Select语法糖，令其在多协程消息传递方面变得十分易用。</p>
+<h2 id="如何关闭-channel？"><a href="#如何关闭-channel？" class="headerlink" title="如何关闭 channel？"></a>如何关闭 channel？</h2><p>对于channel的关闭，需要知道的可以总结为一个知识点：<br><strong>「channel的关闭是一种消息传递方式而非一项必须做的任务」</strong>，channel就算不关闭，当不再能被访问时，也会被GC回收。<br>以及一项实践原则：<br><strong>「只有唯一发送者可关闭channel」</strong>。</p>
+<p>对于这一点更为细致的讲解可参考：<a href="https://go101.org/article/channel-closing.html" target="_blank" rel="noopener">How to Gracefully Close Channels</a>,<a href="https://www.jianshu.com/p/d24dfbb33781" target="_blank" rel="noopener">(中译)</a>。</p>
+<p>在该指导原则下，对channel的关闭可以分为三种情况：一写；多写一读；多写多读。</p>
+<ul>
+<li>一写多读/一读: 这种情况很简单，在单独的写协程处，写完直接关闭channel即可。这种情况对应该例子中的idsChannel。读协程直接for+range即可获取到关闭消息。</li>
+<li>多写一读: 这种情况下不能关闭channel来通知写协程退出，因此需要多一个channel来发送退出消息。对应resChannel，通知channel为StopCh。<h1 id="Golang-Context"><a href="#Golang-Context" class="headerlink" title="Golang Context"></a>Golang Context</h1></li>
+</ul>
+<p>Golang Context的作用：用于通知协程退出的方法，可以传递一定的上下文信息。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>后端</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【golang】Go汇编入门2</title>
     <url>/category/%E3%80%90golang%E3%80%91Go%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A82/</url>
     <content><![CDATA[<p>这是<code>Go汇编入门</code>的第二篇文章，也是计划中的最后一篇。第一篇的地址：<a href="../ZChen-blog.github.io/category/【golang】Go汇编入门1/">【golang】Go汇编入门1</a>。</p>
@@ -175,39 +208,6 @@
       </tags>
   </entry>
   <entry>
-    <title>【golang】类型转换</title>
-    <url>/category/%E3%80%90golang%E3%80%91%E7%B1%BB%E5%9E%8B%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="一、类型转换"><a href="#一、类型转换" class="headerlink" title="一、类型转换"></a>一、类型转换</h1><ol>
-<li>语法：&lt;结果类型&gt; := &lt;目标类型&gt;(&lt;表达式&gt;)</li>
-<li>golang自己的基本类型之间的强制转换，我们在这里不讨论。</li>
-<li>类型的强制转换，可以看成编译原理中的类型等价中的名字等价。例如，下面这三种类型是可以相互转换的：</li>
-</ol>
-<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> test1 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test2 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test3 test1</span><br></pre></td></tr></table></figure>
-
-<p>但是下面这两种类型就不能相互转换了。</p>
-<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> test1 <span class="keyword">struct</span> &#123;</span><br><span class="line">    test1J <span class="keyword">int</span></span><br><span class="line">    test1I <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test2 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>类型强制转换是否可以进行，ide是会有提示的。因此类型转换在编译期完成。</li>
-<li>golang不允许隐式类型转换，但是数字转换成表达式中所需类型是可以的。</li>
-<li>还有一些interface间的强制转换，用到的不多，根据IDE提示就可以判断了。</li>
-</ol>
-<h1 id="二、类型断言"><a href="#二、类型断言" class="headerlink" title="二、类型断言"></a>二、类型断言</h1><ol>
-<li>安全类型断言： &lt;目标类型的值&gt;,&lt;布尔参数&gt; := &lt;表达式&gt;.( 目标类型 )</li>
-<li>非安全类型断言：&lt;目标类型的值&gt; := &lt;表达式&gt;.( 目标类型 )；如果转换错误，则会panic</li>
-<li>类型断言是在运行过程中进行的，因此IDE无法给予提示。</li>
-<li>类型断言只能用于 接口转类型</li>
-</ol>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>golang</tag>
-        <tag>后端</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>【golang】理解interface</title>
     <url>/category/%E3%80%90golang%E3%80%91%E7%90%86%E8%A7%A3interface/</url>
     <content><![CDATA[<h1 id="一、interface基本概念"><a href="#一、interface基本概念" class="headerlink" title="一、interface基本概念"></a>一、interface基本概念</h1><blockquote>
@@ -237,6 +237,39 @@
 </li>
 <li><p><a href="https://speakerdeck.com/campoy/understanding-the-interface" target="_blank" rel="noopener">understanding the interface</a></p>
 </li>
+</ol>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>golang</tag>
+        <tag>后端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【golang】类型转换</title>
+    <url>/category/%E3%80%90golang%E3%80%91%E7%B1%BB%E5%9E%8B%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="一、类型转换"><a href="#一、类型转换" class="headerlink" title="一、类型转换"></a>一、类型转换</h1><ol>
+<li>语法：&lt;结果类型&gt; := &lt;目标类型&gt;(&lt;表达式&gt;)</li>
+<li>golang自己的基本类型之间的强制转换，我们在这里不讨论。</li>
+<li>类型的强制转换，可以看成编译原理中的类型等价中的名字等价。例如，下面这三种类型是可以相互转换的：</li>
+</ol>
+<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> test1 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test2 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test3 test1</span><br></pre></td></tr></table></figure>
+
+<p>但是下面这两种类型就不能相互转换了。</p>
+<figure class="highlight golang"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> test1 <span class="keyword">struct</span> &#123;</span><br><span class="line">    test1J <span class="keyword">int</span></span><br><span class="line">    test1I <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> test2 <span class="keyword">struct</span> &#123;</span><br><span class="line">    i <span class="keyword">int</span></span><br><span class="line">    j <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>类型强制转换是否可以进行，ide是会有提示的。因此类型转换在编译期完成。</li>
+<li>golang不允许隐式类型转换，但是数字转换成表达式中所需类型是可以的。</li>
+<li>还有一些interface间的强制转换，用到的不多，根据IDE提示就可以判断了。</li>
+</ol>
+<h1 id="二、类型断言"><a href="#二、类型断言" class="headerlink" title="二、类型断言"></a>二、类型断言</h1><ol>
+<li>安全类型断言： &lt;目标类型的值&gt;,&lt;布尔参数&gt; := &lt;表达式&gt;.( 目标类型 )</li>
+<li>非安全类型断言：&lt;目标类型的值&gt; := &lt;表达式&gt;.( 目标类型 )；如果转换错误，则会panic</li>
+<li>类型断言是在运行过程中进行的，因此IDE无法给予提示。</li>
+<li>类型断言只能用于 接口转类型</li>
 </ol>
 ]]></content>
       <categories>
@@ -280,6 +313,17 @@
 ]]></content>
   </entry>
   <entry>
+    <title>【李宏毅-机器学习】GNN</title>
+    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91GNN/</url>
+    <content><![CDATA[<h1 id="Spatial-based-GNN"><a href="#Spatial-based-GNN" class="headerlink" title="Spatial-based GNN"></a>Spatial-based GNN</h1><p>Terminology:</p>
+<p>Aggregate: 用neighbor feature update 下一层的hidden state<br>Readout: 每一层hidden layer 的 node feature 做平均，然后× 矩阵，得到输出</p>
+<h2 id="DCNN-（Diffusion-Convolution-Neural-Network"><a href="#DCNN-（Diffusion-Convolution-Neural-Network" class="headerlink" title="DCNN （Diffusion-Convolution Neural Network)"></a>DCNN （Diffusion-Convolution Neural Network)</h2><h2 id="MoNET-Mixture-Model-Networks"><a href="#MoNET-Mixture-Model-Networks" class="headerlink" title="MoNET (Mixture Model Networks)"></a>MoNET (Mixture Model Networks)</h2><h1 id="Spectral-Graph-Theory"><a href="#Spectral-Graph-Theory" class="headerlink" title="Spectral Graph Theory"></a>Spectral Graph Theory</h1>]]></content>
+      <tags>
+        <tag>machine learning</tag>
+        <tag>李宏毅 机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【李宏毅 机器学习】Bert</title>
     <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Bert/</url>
     <content><![CDATA[<p>word embedding 对于相同word type不同word token的词会有相同的embedding。(river bank, money bank)</p>
@@ -313,50 +357,6 @@
 <h1 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h1><h2 id="Enhanced-Representation-through-Knowledge-Integration-ERNIE"><a href="#Enhanced-Representation-through-Knowledge-Integration-ERNIE" class="headerlink" title="Enhanced Representation through Knowledge Integration (ERNIE)"></a>Enhanced Representation through Knowledge Integration (ERNIE)</h2><p>为中文设计的，可以按照语义mask。避免一个词被部分mask，如“哈x滨是一个美x的城市”，在ERNIE中会“xxx是一个美丽的城市”。</p>
 <h2 id="Generative-Pre-Training-GPT"><a href="#Generative-Pre-Training-GPT" class="headerlink" title="Generative Pre-Training (GPT)"></a>Generative Pre-Training (GPT)</h2><p>GPT-2比ELMO和BERT的训练量（参数）多很多。利用了Transformer的Decoder。</p>
 ]]></content>
-      <tags>
-        <tag>machine learning</tag>
-        <tag>李宏毅 机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【Golang】Channel&amp;Context 应用实例</title>
-    <url>/category/%E3%80%90Golang%E3%80%91Channel-Context-%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B/</url>
-    <content><![CDATA[<p>本文将用一个实际应用中的例子来理解如何使用 Golang 的Channel和Context。</p>
-<h1 id="Golang-Channel"><a href="#Golang-Channel" class="headerlink" title="Golang Channel"></a>Golang Channel</h1><p>需求：</p>
-<blockquote>
-<ul>
-<li>根据ID列表，从数据库中捞取ID对应数据</li>
-<li>每条SQL语句最多可取一定量(BatchLimit)的id数据</li>
-<li>最多同时(ParallelLimit)条SQL打到数据库</li>
-</ul>
-</blockquote>
-<p>先放代码：</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParallelGet</span><span class="params">(ids []<span class="keyword">int64</span>, BatchLimit <span class="keyword">int</span>, ParallelLimit <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">interface</span>&#123;&#125;, error)</span></span>&#123;</span><br><span class="line">	idsChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> begin := <span class="number">0</span>; begin &lt; <span class="built_in">len</span>(ids); begin += BatchLimit &#123;</span><br><span class="line">			idsChannel &lt;- ids[begin:mathutil.Min(begin+BatchLimit, <span class="built_in">len</span>(ids))]</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">close</span>(idsChannel)</span><br><span class="line">	&#125;()</span><br><span class="line">	resChannel, errChannel := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">int64</span>, ParallelLimit), <span class="built_in">make</span>(<span class="keyword">chan</span> error, ParallelLimit)</span><br><span class="line">	stopCh := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; ParallelLimit; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">            <span class="keyword">defer</span> util.RecoverFromPanic()</span><br><span class="line">			<span class="keyword">for</span> pIds := <span class="keyword">range</span> idsChannel &#123;</span><br><span class="line">				data, err := multiGetFromDataSet(pIds)</span><br><span class="line">				<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">					errChannel &lt;- err</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">select</span> &#123;</span><br><span class="line">				<span class="keyword">case</span> resChannel &lt;- data:</span><br><span class="line">				<span class="keyword">case</span> &lt;-stopCh:</span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">	&#125;</span><br><span class="line">	totalBatchNum, count := (<span class="built_in">len</span>(ids) - <span class="number">1</span>) / BatchLimit + <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">	res := <span class="built_in">make</span>([]<span class="keyword">int64</span>, <span class="number">0</span>)</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> err := &lt;-errChannel:</span><br><span class="line">			<span class="built_in">close</span>(stopCh)</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">		<span class="keyword">case</span> pRes := &lt;-resChannel:</span><br><span class="line">			res = <span class="built_in">append</span>(res, pRes...)</span><br><span class="line">			count ++</span><br><span class="line">			<span class="keyword">if</span> count == totalBatchNum &#123;</span><br><span class="line">				<span class="built_in">close</span>(stopCh)</span><br><span class="line">				<span class="keyword">return</span> res, <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="用channel来通信！"><a href="#用channel来通信！" class="headerlink" title="用channel来通信！"></a>用channel来通信！</h2><p>「不要用共享内存来通信，而要用通信来共享内存」，这句Golang社区广受推崇的设计理念，对Golang而言更确切说法应为：「应当使用Channel来在Goroutine间同步信息，而不是多个Goroutine直接共享内存」。<br>这句话可以被看作是Golang社区的一句自夸——golang channel的设计使得其比共享内存更易用。<br>Channel的特性配合Select语法糖，令其在多协程消息传递方面变得十分易用。</p>
-<h2 id="如何关闭-channel？"><a href="#如何关闭-channel？" class="headerlink" title="如何关闭 channel？"></a>如何关闭 channel？</h2><p>对于channel的关闭，需要知道的可以总结为一个知识点：<br><strong>「channel的关闭是一种消息传递方式而非一项必须做的任务」</strong>，channel就算不关闭，当不再能被访问时，也会被GC回收。<br>以及一项实践原则：<br><strong>「只有唯一发送者可关闭channel」</strong>。</p>
-<p>对于这一点更为细致的讲解可参考：<a href="https://go101.org/article/channel-closing.html" target="_blank" rel="noopener">How to Gracefully Close Channels</a>,<a href="https://www.jianshu.com/p/d24dfbb33781" target="_blank" rel="noopener">(中译)</a>。</p>
-<p>在该指导原则下，对channel的关闭可以分为三种情况：一写；多写一读；多写多读。</p>
-<ul>
-<li>一写多读/一读: 这种情况很简单，在单独的写协程处，写完直接关闭channel即可。这种情况对应该例子中的idsChannel。读协程直接for+range即可获取到关闭消息。</li>
-<li>多写一读: 这种情况下不能关闭channel来通知写协程退出，因此需要多一个channel来发送退出消息。对应resChannel，通知channel为StopCh。<h1 id="Golang-Context"><a href="#Golang-Context" class="headerlink" title="Golang Context"></a>Golang Context</h1></li>
-</ul>
-<p>Golang Context的作用：用于通知协程退出的方法，可以传递一定的上下文信息。</p>
-]]></content>
-      <categories>
-        <category>后端</category>
-      </categories>
-      <tags>
-        <tag>golang</tag>
-        <tag>后端</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【李宏毅-机器学习】GNN</title>
-    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91GNN/</url>
-    <content><![CDATA[<h1 id="Spatial-based-GNN"><a href="#Spatial-based-GNN" class="headerlink" title="Spatial-based GNN"></a>Spatial-based GNN</h1><p>Terminology:</p>
-<p>Aggregate: 用neighbor feature update 下一层的hidden state<br>Readout: 每一层hidden layer 的 node feature 做平均，然后× 矩阵，得到输出</p>
-<h2 id="DCNN-（Diffusion-Convolution-Neural-Network"><a href="#DCNN-（Diffusion-Convolution-Neural-Network" class="headerlink" title="DCNN （Diffusion-Convolution Neural Network)"></a>DCNN （Diffusion-Convolution Neural Network)</h2><h2 id="MoNET-Mixture-Model-Networks"><a href="#MoNET-Mixture-Model-Networks" class="headerlink" title="MoNET (Mixture Model Networks)"></a>MoNET (Mixture Model Networks)</h2><h1 id="Spectral-Graph-Theory"><a href="#Spectral-Graph-Theory" class="headerlink" title="Spectral Graph Theory"></a>Spectral Graph Theory</h1>]]></content>
       <tags>
         <tag>machine learning</tag>
         <tag>李宏毅 机器学习</tag>
@@ -418,6 +418,38 @@
 <ol start="6">
 <li>Sequence to Sequence auto-encoder</li>
 </ol>
+]]></content>
+      <tags>
+        <tag>machine learning</tag>
+        <tag>李宏毅 机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【李宏毅 机器学习】Unsupervised Learning: Dimension Reduction</title>
+    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Dimension-Reduction/</url>
+    <content><![CDATA[<p>无监督学习可以做两种事情</p>
+<ul>
+<li>Clustering &amp; Dimension Reduction (化繁为简)</li>
+<li>Generation (无中生有)</li>
+</ul>
+<h1 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h1><h2 id="聚类数量自行决定"><a href="#聚类数量自行决定" class="headerlink" title="聚类数量自行决定"></a>聚类数量自行决定</h2><ol>
+<li>K-means</li>
+</ol>
+<h2 id="Hierarchical-Agglomerative-Clustering-HAC"><a href="#Hierarchical-Agglomerative-Clustering-HAC" class="headerlink" title="Hierarchical Agglomerative Clustering (HAC)"></a>Hierarchical Agglomerative Clustering (HAC)</h2><p>Step 1: build a tree<br>Step 2: pick a threshold</p>
+<h1 id="Distributed-Repersentation"><a href="#Distributed-Repersentation" class="headerlink" title="Distributed Repersentation"></a>Distributed Repersentation</h1><ul>
+<li>Clustering: must be one</li>
+<li>Distributed representation: 用一个向量表示, 也是Dimension Reduction</li>
+</ul>
+<ol>
+<li>Feature Selection: 删除无用dimension</li>
+<li>Principle component analysis (PCA)</li>
+</ol>
+<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><p>Linear的方法，无法解决非linear情况。</p>
+<p>z = Wx</p>
+<p>W为单位正交矩阵，使得z的variance最大。 </p>
+<h1 id="Matrix-Factorization"><a href="#Matrix-Factorization" class="headerlink" title="Matrix Factorization"></a>Matrix Factorization</h1><p>SVD分解？</p>
+<p>分别加bias</p>
+<p>用于推荐系统，Latent semantic analysis</p>
 ]]></content>
       <tags>
         <tag>machine learning</tag>
@@ -586,38 +618,6 @@
       <categories>
         <category>工具&amp;环境</category>
       </categories>
-  </entry>
-  <entry>
-    <title>【李宏毅 机器学习】Unsupervised Learning: Dimension Reduction</title>
-    <url>/category/%E3%80%90%E6%9D%8E%E5%AE%8F%E6%AF%85-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E3%80%91Unsupervised-Learning-Dimension-Reduction/</url>
-    <content><![CDATA[<p>无监督学习可以做两种事情</p>
-<ul>
-<li>Clustering &amp; Dimension Reduction (化繁为简)</li>
-<li>Generation (无中生有)</li>
-</ul>
-<h1 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h1><h2 id="聚类数量自行决定"><a href="#聚类数量自行决定" class="headerlink" title="聚类数量自行决定"></a>聚类数量自行决定</h2><ol>
-<li>K-means</li>
-</ol>
-<h2 id="Hierarchical-Agglomerative-Clustering-HAC"><a href="#Hierarchical-Agglomerative-Clustering-HAC" class="headerlink" title="Hierarchical Agglomerative Clustering (HAC)"></a>Hierarchical Agglomerative Clustering (HAC)</h2><p>Step 1: build a tree<br>Step 2: pick a threshold</p>
-<h1 id="Distributed-Repersentation"><a href="#Distributed-Repersentation" class="headerlink" title="Distributed Repersentation"></a>Distributed Repersentation</h1><ul>
-<li>Clustering: must be one</li>
-<li>Distributed representation: 用一个向量表示, 也是Dimension Reduction</li>
-</ul>
-<ol>
-<li>Feature Selection: 删除无用dimension</li>
-<li>Principle component analysis (PCA)</li>
-</ol>
-<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><p>Linear的方法，无法解决非linear情况。</p>
-<p>z = Wx</p>
-<p>W为单位正交矩阵，使得z的variance最大。 </p>
-<h1 id="Matrix-Factorization"><a href="#Matrix-Factorization" class="headerlink" title="Matrix Factorization"></a>Matrix Factorization</h1><p>SVD分解？</p>
-<p>分别加bias</p>
-<p>用于推荐系统，Latent semantic analysis</p>
-]]></content>
-      <tags>
-        <tag>machine learning</tag>
-        <tag>李宏毅 机器学习</tag>
-      </tags>
   </entry>
   <entry>
     <title>基于Docker搭建深度学习环境</title>
